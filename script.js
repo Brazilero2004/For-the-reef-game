@@ -14,7 +14,7 @@ let player = {
 };
 
 // Set the image source to your uploaded GitHub image
-player.img.src = "YOUR_IMAGE_URL_HERE"; // Replace with actual GitHub image URL
+player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitHub image URL
 
 // Listen for arrow key presses to move the player
 document.addEventListener("keydown", function(event) {
