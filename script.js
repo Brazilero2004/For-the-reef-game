@@ -30,12 +30,26 @@ resetPlayerPosition();
 // Set the image source to your uploaded GitHub image
 player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitHub image URL
 
+// Floating animation variables
+let floatOffset = 0;
+let floatDirection = 1;
+let tiltAngle = 0;
+let targetTilt = 0;
+
 // Keyboard movement
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
-        player.x -= player.speed * 10; // Speed adjusted for keyboard
+        player.x -= player.speed * 10;
+        targetTilt = -10; // Tilt slightly left
     } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
         player.x += player.speed * 10;
+        targetTilt = 10; // Tilt slightly right
+    }
+});
+
+document.addEventListener("keyup", function(event) {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        targetTilt = 0; // Reset tilt when not moving
     }
 });
 
@@ -60,13 +74,16 @@ function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
 
-    // Move player smoothly instead of jumping instantly
-    let moveSpeed = player.speed * 15; // Adjust this for sensitivity (lower = slower)
+    let moveSpeed = player.speed * 15;
 
     if (canvasX < player.x) {
-        player.x -= moveSpeed; // Move left smoothly
+        player.x -= moveSpeed;
+        targetTilt = -10; // Tilt left
     } else if (canvasX > player.x + player.width) {
-        player.x += moveSpeed; // Move right smoothly
+        player.x += moveSpeed;
+        targetTilt = 10; // Tilt right
+    } else {
+        targetTilt = 0; // Reset tilt if not moving
     }
 
     // Prevent the player from moving off the screen
@@ -74,9 +91,22 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
-// Function to draw the player using the image
+// Function to draw the player with bobbing and tilt animation
 function drawPlayer() {
-    ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
+    // Make the bear float up and down slightly
+    floatOffset += floatDirection * 0.3;
+    if (floatOffset > 5 || floatOffset < -5) {
+        floatDirection *= -1;
+    }
+
+    // Smooth tilt animation
+    tiltAngle += (targetTilt - tiltAngle) * 0.1;
+
+    ctx.save(); // Save the current drawing state
+    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + floatOffset);
+    ctx.rotate(tiltAngle * Math.PI / 180); // Apply tilt rotation
+    ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
+    ctx.restore(); // Restore original state
 }
 
 // Main game loop
