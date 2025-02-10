@@ -17,8 +17,8 @@ let player = {
     img: new Image()
 };
 
-// Set the new image source
-player.img.src = "file-B8Vixq9FWgAQJSosLQmXgU.webp"; // Replace with the actual GitHub image URL
+// Set the new image source (Transparent PNG)
+player.img.src = "1000084073-removebg-preview.png"; // Replace with the actual GitHub image URL
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
