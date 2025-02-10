@@ -25,18 +25,34 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-// Touch movement for mobile
+// Touch movement for mobile (smooth dragging)
+let isTouching = false;
+
 canvas.addEventListener("touchstart", function(event) {
-    let touchX = event.touches[0].clientX;
+    isTouching = true;
+    movePlayer(event.touches[0].clientX);
+});
+
+canvas.addEventListener("touchmove", function(event) {
+    if (isTouching) {
+        movePlayer(event.touches[0].clientX);
+    }
+});
+
+canvas.addEventListener("touchend", function() {
+    isTouching = false;
+});
+
+function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
 
-    if (canvasX < player.x) {
-        player.x -= player.speed * 2; // Move left
-    } else if (canvasX > player.x + player.width) {
-        player.x += player.speed * 2; // Move right
-    }
-});
+    player.x = canvasX - player.width / 2;
+
+    // Prevent the player from moving off the screen
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+}
 
 // Function to draw the player using the image
 function drawPlayer() {
