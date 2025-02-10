@@ -11,13 +11,21 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 let player = {
-    x: canvas.width / 2 - 25,
-    y: canvas.height - 60,
-    width: 50, // Adjust as needed
-    height: 50,
-    speed: 5,
+    width: canvas.width * 0.1,  // Player size is 10% of the screen width
+    height: canvas.width * 0.1, // Keep the same aspect ratio
+    speed: canvas.width * 0.01, // Movement speed scales with screen size
     img: new Image()
 };
+
+// Position the player at the bottom center of the screen
+function resetPlayerPosition() {
+    player.x = canvas.width / 2 - player.width / 2;
+    player.y = canvas.height - player.height * 1.5;
+}
+
+// Call this function every time the canvas resizes
+window.addEventListener("resize", resetPlayerPosition);
+resetPlayerPosition();
 
 // Set the image source to your uploaded GitHub image
 player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitHub image URL
