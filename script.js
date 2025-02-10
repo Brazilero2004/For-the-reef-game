@@ -1,8 +1,14 @@
 let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext("2d");
 
-canvas.width = 800;
-canvas.height = 600;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+// Resize the canvas when the page loads & when the window resizes
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
 let player = {
     x: canvas.width / 2 - 25,
