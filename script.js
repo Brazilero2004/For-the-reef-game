@@ -16,12 +16,25 @@ let player = {
 // Set the image source to your uploaded GitHub image
 player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitHub image URL
 
-// Listen for arrow key presses to move the player
+// Keyboard movement
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
         player.x -= player.speed;
     } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
         player.x += player.speed;
+    }
+});
+
+// Touch movement for mobile
+canvas.addEventListener("touchstart", function(event) {
+    let touchX = event.touches[0].clientX;
+    let canvasRect = canvas.getBoundingClientRect();
+    let canvasX = touchX - canvasRect.left;
+
+    if (canvasX < player.x) {
+        player.x -= player.speed * 2; // Move left
+    } else if (canvasX > player.x + player.width) {
+        player.x += player.speed * 2; // Move right
     }
 });
 
