@@ -13,7 +13,7 @@ resizeCanvas();
 let player = {
     width: canvas.width * 0.1,  // Player size is 10% of the screen width
     height: canvas.width * 0.1, // Keep the same aspect ratio
-    speed: canvas.width * 0.01, // Movement speed scales with screen size
+    speed: canvas.width * 0.005, // Slower movement speed
     img: new Image()
 };
 
@@ -33,9 +33,9 @@ player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitH
 // Keyboard movement
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
-        player.x -= player.speed;
+        player.x -= player.speed * 10; // Speed adjusted for keyboard
     } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
-        player.x += player.speed;
+        player.x += player.speed * 10;
     }
 });
 
@@ -44,7 +44,6 @@ let isTouching = false;
 
 canvas.addEventListener("touchstart", function(event) {
     isTouching = true;
-    movePlayer(event.touches[0].clientX);
 });
 
 canvas.addEventListener("touchmove", function(event) {
@@ -61,7 +60,14 @@ function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
 
-    player.x = canvasX - player.width / 2;
+    // Move player smoothly instead of jumping instantly
+    let moveSpeed = player.speed * 15; // Adjust this for sensitivity (lower = slower)
+
+    if (canvasX < player.x) {
+        player.x -= moveSpeed; // Move left smoothly
+    } else if (canvasX > player.x + player.width) {
+        player.x += moveSpeed; // Move right smoothly
+    }
 
     // Prevent the player from moving off the screen
     if (player.x < 0) player.x = 0;
