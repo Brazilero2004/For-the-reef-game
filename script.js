@@ -17,6 +17,9 @@ let player = {
     img: new Image()
 };
 
+// Set the new image source
+player.img.src = "file-B8Vixq9FWgAQJSosLQmXgU.webp"; // Replace with the actual GitHub image URL
+
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
     player.x = canvas.width / 2 - player.width / 2;
@@ -26,9 +29,6 @@ function resetPlayerPosition() {
 // Call this function every time the canvas resizes
 window.addEventListener("resize", resetPlayerPosition);
 resetPlayerPosition();
-
-// Set the image source to your uploaded GitHub image
-player.img.src = "file-FWrM1XhM33DkDCipnCvQjg.webp"; // Replace with actual GitHub image URL
 
 // Floating animation variables
 let floatOffset = 0;
