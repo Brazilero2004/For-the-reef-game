@@ -11,28 +11,28 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 let player = {
-    width: canvas.width * 0.1,  // Player size is 10% of the screen width
-    height: canvas.width * 0.1, // Keep the same aspect ratio
-    speed: canvas.width * 0.005, // Slower movement speed
+    width: canvas.width * 0.2,  // Increased to 20% of screen width
+    height: canvas.width * 0.2, // Keep the same aspect ratio
+    speed: canvas.width * 0.007, // Adjusted speed for new size
     img: new Image()
 };
 
 // Set the new image source (Transparent PNG)
-player.img.src = "1000084073-removebg-preview.png"; // Replace with the actual GitHub image URL
+player.img.src = "1000084073-removebg-preview.png"; // Replace with actual GitHub image URL
 
 // Load ocean background image (Caribbean-style underwater scene)
 let oceanBackground = new Image();
-oceanBackground.src = "file-6qJQMBBr8kE52beoMufxXi.png"; // Replace with the actual GitHub image URL
+oceanBackground.src = "file-6qJQMBBr8kE52beoMufxXi.png"; // Replace with actual GitHub image URL
 
-// Load reef background image
+// Load updated reef background image
 let reefBackground = new Image();
-reefBackground.src = "1000084167-removebg-preview.png"; // Replace with the actual GitHub image URL
+reefBackground.src = "1000084167-removebg-preview.png"; // Replace with actual GitHub image URL
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
     let reefHeight = canvas.height * 0.3; // Match reef height
     player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - reefHeight - player.height * 1.2; // Position above the reef
+    player.y = canvas.height - reefHeight - player.height * 1.5; // Adjusted position above the reef
 }
 
 // Call this function every time the canvas resizes
