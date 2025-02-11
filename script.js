@@ -20,6 +20,10 @@ let player = {
 // Set the new image source (Transparent PNG)
 player.img.src = "1000084073-removebg-preview.png"; // Replace with the actual GitHub image URL
 
+// Load reef background image
+let reefBackground = new Image();
+reefBackground.src = "1000084167-removebg-preview.png"; // Replace with the actual GitHub image URL
+
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
     player.x = canvas.width / 2 - player.width / 2;
@@ -91,6 +95,11 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
+// Function to draw the background reef
+function drawBackground() {
+    ctx.drawImage(reefBackground, 0, 0, canvas.width, canvas.height);
+}
+
 // Function to draw the player with bobbing and tilt animation
 function drawPlayer() {
     // Make the bear float up and down slightly
@@ -112,7 +121,8 @@ function drawPlayer() {
 // Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPlayer();
+    drawBackground(); // Draw the reef first
+    drawPlayer();     // Draw the player on top
     requestAnimationFrame(gameLoop);
 }
 
