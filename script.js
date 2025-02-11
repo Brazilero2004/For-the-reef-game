@@ -20,9 +20,9 @@ let player = {
 // Set the new image source (Transparent PNG)
 player.img.src = "1000084073-removebg-preview.png"; // Replace with the actual GitHub image URL
 
-// Load ocean background image
+// Load ocean background image (Caribbean-style underwater scene)
 let oceanBackground = new Image();
-oceanBackground.src = "file-M66AUtAmXzsySoqwUvq4p4.png"; // Replace with the actual GitHub image URL
+oceanBackground.src = "file-6qJQMBBr8kE52beoMufxXi.png"; // Replace with the actual GitHub image URL
 
 // Load reef background image
 let reefBackground = new Image();
