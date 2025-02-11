@@ -20,14 +20,19 @@ let player = {
 // Set the new image source (Transparent PNG)
 player.img.src = "1000084073-removebg-preview.png"; // Replace with the actual GitHub image URL
 
+// Load ocean background image
+let oceanBackground = new Image();
+oceanBackground.src = "file-M66AUtAmXzsySoqwUvq4p4.png"; // Replace with the actual GitHub image URL
+
 // Load reef background image
 let reefBackground = new Image();
 reefBackground.src = "1000084167-removebg-preview.png"; // Replace with the actual GitHub image URL
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
+    let reefHeight = canvas.height * 0.3; // Match reef height
     player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - player.height * 1.5;
+    player.y = canvas.height - reefHeight - player.height * 1.2; // Position above the reef
 }
 
 // Call this function every time the canvas resizes
@@ -95,9 +100,17 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
-// Function to draw the background reef
+// Function to draw the background ocean
 function drawBackground() {
-    ctx.drawImage(reefBackground, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height); // Draw ocean
+}
+
+// Function to draw the background reef
+function drawReef() {
+    let reefHeight = canvas.height * 0.3; // Reef takes up 30% of screen height
+    let reefY = canvas.height - reefHeight; // Position at the bottom
+
+    ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
 }
 
 // Function to draw the player with bobbing and tilt animation
@@ -121,8 +134,9 @@ function drawPlayer() {
 // Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground(); // Draw the reef first
-    drawPlayer();     // Draw the player on top
+    drawBackground(); // Draw ocean first
+    drawReef();       // Draw reef on top
+    drawPlayer();     // Draw the bear on top of everything
     requestAnimationFrame(gameLoop);
 }
 
