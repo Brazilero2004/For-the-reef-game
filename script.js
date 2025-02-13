@@ -20,13 +20,13 @@ let player = {
 // Set the new image source (Transparent PNG)
 player.img.src = "1000084073-removebg-preview.png"; // Replace with actual GitHub image URL
 
-// Load ocean background image (Caribbean-style underwater scene)
+// Load updated ocean background image
 let oceanBackground = new Image();
-oceanBackground.src = "file-6qJQMBBr8kE52beoMufxXi.png"; // Replace with actual GitHub image URL
+oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; // Replace with actual GitHub image URL
 
 // Load updated reef background image
 let reefBackground = new Image();
-reefBackground.src = "1000084167-removebg-preview.png"; // Replace with actual GitHub image URL
+reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; // Replace with actual GitHub image URL
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
