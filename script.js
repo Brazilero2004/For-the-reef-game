@@ -36,10 +36,10 @@ let reefHealth = maxReefHealth;
 // ✅ Starfish & Bubbles
 let starfishArray = []; 
 let starfishSpeed = 1.5; 
-let spawnRate = 3000; 
+let spawnRate = 2000; // 🔹 Starfish now spawn every 2 seconds
 
 let bubbleArray = []; 
-let bubbleSpeed = 6; 
+let bubbleSpeed = 10; // 🔹 Increased speed so bubbles travel higher
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
@@ -76,7 +76,7 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Auto-Shooting Bubbles
+// ✅ Auto-Shooting Bubbles (Continuous Stream)
 function startAutoShooting() {
     setInterval(() => {
         let numBubbles = 4;
@@ -99,16 +99,16 @@ function startAutoShooting() {
     }, 200);
 }
 
-// ✅ Move Bubbles
+// ✅ Move Bubbles (Higher Reach)
 function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
 
-        bubble.y -= bubble.speed;
-        bubble.x += Math.sin(bubble.y * 0.05) * 1.8; 
-        bubble.opacity -= 0.02; 
+        bubble.y -= bubble.speed; // Move upward faster
+        bubble.x += Math.sin(bubble.y * 0.05) * 2; // Wobble effect
+        bubble.opacity -= 0.015; // Slower fade-out
 
-        if (bubble.y < 0 || bubble.opacity <= 0) {
+        if (bubble.y < -50 || bubble.opacity <= 0) { // 🔹 Lifespan extended to allow higher reach
             bubbleArray.splice(i, 1);
             i--;
         }
@@ -139,31 +139,31 @@ function drawBubbles() {
 function spawnStarfish() {
     let starfishSize = 30;
     let xPosition = Math.random() * (canvas.width - starfishSize);
-    starfishArray.push({ x: xPosition, y: 0, size: starfishSize });
+    starfishArray.push({ x: xPosition, y: -50, size: starfishSize }); // 🔹 Start slightly off-screen
 }
 setInterval(spawnStarfish, spawnRate);
 
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        starfishArray[i].y += starfishSpeed;
+        let starfish = starfishArray[i];
+        starfish.y += starfishSpeed; 
 
-        for (let j = 0; j < bubbleArray.length; j++) {
-            let dx = bubbleArray[j].x - starfishArray[i].x;
-            let dy = bubbleArray[j].y - starfishArray[i].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < starfishArray[i].size / 2 + bubbleArray[j].size / 2) {
-                starfishArray.splice(i, 1);
-                bubbleArray.splice(j, 1);
-                break;
-            }
-        }
-
-        if (starfishArray[i]?.y + starfishArray[i]?.size >= canvas.height - canvas.height * 0.3) {
+        // 🔹 Check if starfish reaches reef
+        if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--;
             starfishArray.splice(i, 1);
+            i--;
             if (reefHealth <= 0) gameOver();
         }
+    }
+}
+
+function drawStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        ctx.fillStyle = "red"; // 🔹 Temporary color until images are used
+        ctx.beginPath();
+        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 
@@ -193,8 +193,9 @@ function gameLoop() {
     updateBubbles();
     drawBubbles();
     updateStarfish();
-    drawPlayer();
+    drawStarfish();
     drawHealthMeter();
+    drawPlayer();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
