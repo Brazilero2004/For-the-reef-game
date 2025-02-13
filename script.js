@@ -39,6 +39,10 @@ let spawnRate = 2000;
 let bubbleArray = []; 
 let bubbleSpeed = 10; 
 
+// ✅ Difficulty Scaling
+let difficultyIncreaseRate = 30000; // 🔹 Increase difficulty every 30 seconds
+let gameStartTime = Date.now();
+
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
     let reefHeight = canvas.height * 0.3; 
@@ -133,19 +137,30 @@ function drawBubbles() {
     }
 }
 
-// ✅ Spawn & Move Starfish
+// ✅ Spawn & Move Starfish with Difficulty Scaling
 function spawnStarfish() {
-    let starfishSize = 30;
+    let elapsedTime = Date.now() - gameStartTime;
+    
+    // 🔹 Increase spawn rate gradually
+    let adjustedSpawnRate = Math.max(500, spawnRate - Math.floor(elapsedTime / 3000)); 
+
+    let starfishSize = 30 + Math.min(10, Math.floor(elapsedTime / 20000)); 
     let xPosition = Math.random() * (canvas.width - starfishSize);
     starfishArray.push({ x: xPosition, y: -50, size: starfishSize });
-}
-setInterval(spawnStarfish, spawnRate);
 
-// ✅ Updated: Starfish Collision with Bubbles
+    setTimeout(spawnStarfish, adjustedSpawnRate);
+}
+setTimeout(spawnStarfish, spawnRate);
+
 function updateStarfish() {
+    let elapsedTime = Date.now() - gameStartTime;
+    
+    // 🔹 Increase starfish speed gradually
+    let adjustedSpeed = starfishSpeed + Math.min(2, elapsedTime / 50000);
+
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
-        starfish.y += starfishSpeed;
+        starfish.y += adjustedSpeed;
 
         // 🔹 Check for collision with bubbles
         for (let j = 0; j < bubbleArray.length; j++) {
@@ -156,10 +171,9 @@ function updateStarfish() {
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < starfish.size / 2 + bubble.size / 2) {
-                // 🔹 Remove both the starfish and the bubble upon collision
                 starfishArray.splice(i, 1);
                 bubbleArray.splice(j, 1);
-                i--; // Adjust index after removal
+                i--;
                 break;
             }
         }
@@ -178,7 +192,7 @@ function updateStarfish() {
 // ✅ Draw Starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red"; // 🔹 Temporary color until images are used
+        ctx.fillStyle = "red"; 
         ctx.beginPath();
         ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
@@ -203,7 +217,7 @@ function gameOver() {
     alert("The reef has been destroyed! Refresh to play again.");
 }
 
-// ✅ Game Loop (Ensures Auto Start)
+// ✅ Game Loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
