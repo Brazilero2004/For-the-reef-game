@@ -56,6 +56,18 @@ let floatDirection = 1;
 let tiltAngle = 0;
 let targetTilt = 0;
 
+// ✅ Fix: Reef switches to damaged when health is 50% or lower
+function drawReef() {
+    let reefHeight = canvas.height * 0.3;
+    let reefY = canvas.height - reefHeight;
+
+    if (reefHealth > maxReefHealth * 0.5) {
+        ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
+    } else {
+        ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
+    }
+}
+
 // ✅ Fix: Re-enable player movement (Keyboard)
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
@@ -75,7 +87,7 @@ document.addEventListener("keyup", function(event) {
 
 // ✅ Fix: Enable smooth touch movement for mobile
 canvas.addEventListener("touchstart", function(event) {
-    event.preventDefault(); // Prevent scrolling while touching
+    event.preventDefault(); 
     movePlayer(event.touches[0].clientX);
 });
 
@@ -89,10 +101,8 @@ function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
 
-    // Move directly to the touched position
     player.x = canvasX - player.width / 2;
 
-    // Prevent the player from moving off-screen
     if (player.x < 0) player.x = 0;
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
@@ -111,18 +121,6 @@ function drawPlayer() {
     ctx.rotate(tiltAngle * Math.PI / 180);
     ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
-}
-
-// Function to draw the reef
-function drawReef() {
-    let reefHeight = canvas.height * 0.3;
-    let reefY = canvas.height - reefHeight;
-
-    if (reefHealth > 0) {
-        ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
-    } else {
-        ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
-    }
 }
 
 // Function to draw the health meter
@@ -192,7 +190,7 @@ setInterval(spawnStarfish, spawnRate);
 // Function to draw starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red"; // Temporary placeholder
+        ctx.fillStyle = "red"; 
         ctx.beginPath();
         ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
