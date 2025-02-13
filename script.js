@@ -6,7 +6,6 @@ function resizeCanvas() {
     canvas.height = window.innerHeight;
 }
 
-// Resize the canvas when the page loads & when the window resizes
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
@@ -17,10 +16,16 @@ let player = {
     img: new Image()
 };
 
-// Ensure the player image loads before starting
+// ✅ Ensure the player image loads properly
 player.img.src = "1000084073-removebg-preview.png"; 
+player.img.onload = function() {
+    console.log("Player image loaded successfully.");
+};
+player.img.onerror = function() {
+    console.error("Error loading player image!");
+};
 
-// Load background images
+// ✅ Ensure background images load correctly
 let oceanBackground = new Image();
 oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; 
 
@@ -28,26 +33,29 @@ let reefBackground = new Image();
 reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; 
 
 let damagedReefBackground = new Image();
+damagedReefBackground.src = "20250212_203814.png"; 
+
 damagedReefBackground.onload = function() {
     console.log("Damaged reef image loaded successfully.");
 };
 damagedReefBackground.onerror = function() {
     console.error("Error loading damaged reef image!");
 };
-damagedReefBackground.src = "20250212_203814.png"; 
 
 // Reef health system
 let maxReefHealth = 10; 
 let reefHealth = maxReefHealth; 
 
-// Starfish variables
+// Starfish and Bubble variables
 let starfishArray = []; 
 let starfishSpeed = 1.5; 
 let spawnRate = 3000; 
 
-// Bubble shooting variables
 let bubbleArray = []; 
 let bubbleSpeed = 4; 
+
+// ✅ Auto-shooting interval
+let shootingInterval;
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
@@ -56,17 +64,10 @@ function resetPlayerPosition() {
     player.y = canvas.height - reefHeight - player.height * 1.5; 
 }
 
-// Resize event to reposition the player
 window.addEventListener("resize", resetPlayerPosition);
 resetPlayerPosition();
 
-// Floating animation variables
-let floatOffset = 0;
-let floatDirection = 1;
-let tiltAngle = 0;
-let targetTilt = 0;
-
-// ✅ Fix: Reef switches to damaged when health is 50% or lower
+// ✅ Fix: Reef changes when health is 50% or lower
 function drawReef() {
     let reefHeight = canvas.height * 0.3;
     let reefY = canvas.height - reefHeight;
@@ -78,24 +79,16 @@ function drawReef() {
     }
 }
 
-// ✅ Player Movement (Keyboard)
+// ✅ Player movement (Keyboard)
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
         player.x -= player.speed * 10;
-        targetTilt = -10; 
     } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
         player.x += player.speed * 10;
-        targetTilt = 10; 
     }
 });
 
-document.addEventListener("keyup", function(event) {
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        targetTilt = 0; 
-    }
-});
-
-// ✅ Player Movement (Touchscreen)
+// ✅ Player movement (Touchscreen)
 canvas.addEventListener("touchstart", function(event) {
     event.preventDefault(); 
     movePlayer(event.touches[0].clientX);
@@ -106,7 +99,6 @@ canvas.addEventListener("touchmove", function(event) {
     movePlayer(event.touches[0].clientX);
 });
 
-// Function to move the player smoothly based on touch position
 function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
@@ -119,16 +111,18 @@ function movePlayer(touchX) {
 
 // ✅ Auto-Shooting Bubbles
 function startAutoShooting() {
-    setInterval(() => {
-        let bubbleSize = 15; 
-        let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
-        let bubbleY = player.y; 
+    if (!shootingInterval) {
+        shootingInterval = setInterval(() => {
+            let bubbleSize = 15; 
+            let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
+            let bubbleY = player.y; 
 
-        bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
-    }, 500); // Shoots a bubble every 500ms
+            bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
+        }, 500); 
+    }
 }
 
-// ✅ Move bubbles upward
+// ✅ Update bubbles
 function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         bubbleArray[i].y -= bubbleSpeed; 
@@ -155,7 +149,6 @@ function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         starfishArray[i].y += starfishSpeed;
 
-        // Check if any bubble hits a starfish
         for (let j = 0; j < bubbleArray.length; j++) {
             let dx = bubbleArray[j].x - starfishArray[i].x;
             let dy = bubbleArray[j].y - starfishArray[i].y;
@@ -174,18 +167,7 @@ function updateStarfish() {
 
 // ✅ Function to draw the player
 function drawPlayer() {
-    floatOffset += floatDirection * 0.3;
-    if (floatOffset > 5 || floatOffset < -5) {
-        floatDirection *= -1;
-    }
-
-    tiltAngle += (targetTilt - tiltAngle) * 0.1;
-
-    ctx.save();
-    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + floatOffset);
-    ctx.rotate(tiltAngle * Math.PI / 180);
-    ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
-    ctx.restore();
+    ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
 
 // ✅ Game loop
@@ -198,7 +180,6 @@ function gameLoop() {
     drawBubbles();
     drawStarfish();
     drawPlayer();
-    drawHealthMeter();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
@@ -220,6 +201,6 @@ function drawStarfish() {
     }
 }
 
-// Start the game loop and auto-shooting
+// ✅ Start the game loop and auto-shooting
 gameLoop();
 startAutoShooting();
