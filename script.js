@@ -71,13 +71,9 @@ function drawReef() {
     let reefHeight = canvas.height * 0.3;
     let reefY = canvas.height - reefHeight;
 
-    console.log("Reef Health:", reefHealth); 
-
     if (reefHealth > maxReefHealth * 0.5) {
-        console.log("Displaying healthy reef.");
         ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
     } else {
-        console.log("Displaying damaged reef.");
         ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
     }
 }
@@ -121,13 +117,15 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
-// ✅ Function to shoot bubbles
-function shootBubble() {
-    let bubbleSize = 15; 
-    let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
-    let bubbleY = player.y; 
+// ✅ Auto-Shooting Bubbles
+function startAutoShooting() {
+    setInterval(() => {
+        let bubbleSize = 15; 
+        let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
+        let bubbleY = player.y; 
 
-    bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
+        bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
+    }, 500); // Shoots a bubble every 500ms
 }
 
 // ✅ Move bubbles upward
@@ -173,17 +171,6 @@ function updateStarfish() {
         }
     }
 }
-
-// ✅ Player can shoot bubbles by pressing spacebar or tapping
-document.addEventListener("keydown", function(event) {
-    if (event.key === " ") { 
-        shootBubble();
-    }
-});
-canvas.addEventListener("touchstart", function(event) {
-    event.preventDefault(); 
-    shootBubble();
-});
 
 // ✅ Function to draw the player
 function drawPlayer() {
@@ -233,5 +220,6 @@ function drawStarfish() {
     }
 }
 
-// Start the game loop
+// Start the game loop and auto-shooting
 gameLoop();
+startAutoShooting();
