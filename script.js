@@ -11,43 +11,67 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 let player = {
-    width: canvas.width * 0.2,  // Increased to 20% of screen width
-    height: canvas.width * 0.2, // Keep the same aspect ratio
-    speed: canvas.width * 0.007, // Adjusted speed for new size
+    width: canvas.width * 0.2,  
+    height: canvas.width * 0.2,  
+    speed: canvas.width * 0.007, 
     img: new Image()
 };
 
-// Set the new image source (Transparent PNG)
-player.img.src = "1000084073-removebg-preview.png"; // Replace with actual GitHub image URL
+// ✅ Fix: Ensure the player image loads fully before starting the game
+player.img.onload = function () {
+    console.log("Polar bear image loaded successfully.");
+};
+player.img.onerror = function () {
+    console.error("Error loading polar bear image!");
+};
+player.img.src = "1000084073-removebg-preview.png"; // Ensure this URL is correct
 
 // Load updated ocean background image
 let oceanBackground = new Image();
-oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; // Replace with actual GitHub image URL
+oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; 
 
 // Load reef images (healthy and damaged)
 let reefBackground = new Image();
-reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; // Replace with actual GitHub image URL
+reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; 
 
 let damagedReefBackground = new Image();
-damagedReefBackground.src = "20250212_203814.png"; // Replace with actual GitHub image URL
+damagedReefBackground.src = "20250212_203814.png"; 
 
 // Reef health system
-let maxReefHealth = 10; // Maximum reef health
-let reefHealth = maxReefHealth; // Current reef health
+let maxReefHealth = 10; 
+let reefHealth = maxReefHealth; 
 
 // Starfish variables
-let starfishArray = []; // Array to store starfish
-let starfishSpeed = 1.5; // Starfish movement speed
-let spawnRate = 3000; // Spawn a new starfish every 3 seconds
+let starfishArray = []; 
+let starfishSpeed = 1.5; 
+let spawnRate = 3000; 
+
+// ✅ Fix: Ensure game only starts after images load
+let imagesLoaded = 0;
+let totalImages = 4; 
+
+function imageLoaded() {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+        console.log("All images loaded. Starting game...");
+        gameLoop();
+    }
+}
+
+// Ensure all images are fully loaded before game starts
+oceanBackground.onload = imageLoaded;
+reefBackground.onload = imageLoaded;
+damagedReefBackground.onload = imageLoaded;
+player.img.onload = imageLoaded;
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
-    let reefHeight = canvas.height * 0.3; // Match reef height
+    let reefHeight = canvas.height * 0.3; 
     player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - reefHeight - player.height * 1.5; // Adjusted position above the reef
+    player.y = canvas.height - reefHeight - player.height * 1.5; 
 }
 
-// Call this function every time the canvas resizes
+// Resize event to reposition the player
 window.addEventListener("resize", resetPlayerPosition);
 resetPlayerPosition();
 
@@ -57,73 +81,31 @@ let floatDirection = 1;
 let tiltAngle = 0;
 let targetTilt = 0;
 
-// Keyboard movement
-document.addEventListener("keydown", function(event) {
-    if (event.key === "ArrowLeft" && player.x > 0) {
-        player.x -= player.speed * 10;
-        targetTilt = -10; // Tilt slightly left
-    } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
-        player.x += player.speed * 10;
-        targetTilt = 10; // Tilt slightly right
-    }
-});
-
-document.addEventListener("keyup", function(event) {
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        targetTilt = 0; // Reset tilt when not moving
-    }
-});
-
-// Touch movement for mobile (smooth dragging)
-let isTouching = false;
-
-canvas.addEventListener("touchstart", function(event) {
-    isTouching = true;
-});
-
-canvas.addEventListener("touchmove", function(event) {
-    if (isTouching) {
-        movePlayer(event.touches[0].clientX);
-    }
-});
-
-canvas.addEventListener("touchend", function() {
-    isTouching = false;
-});
-
-function movePlayer(touchX) {
-    let canvasRect = canvas.getBoundingClientRect();
-    let canvasX = touchX - canvasRect.left;
-
-    let moveSpeed = player.speed * 15;
-
-    if (canvasX < player.x) {
-        player.x -= moveSpeed;
-        targetTilt = -10; // Tilt left
-    } else if (canvasX > player.x + player.width) {
-        player.x += moveSpeed;
-        targetTilt = 10; // Tilt right
-    } else {
-        targetTilt = 0; // Reset tilt if not moving
+// Function to draw the player
+function drawPlayer() {
+    if (!player.img.complete) {
+        console.log("Waiting for player image to load...");
+        return;
     }
 
-    // Prevent the player from moving off the screen
-    if (player.x < 0) player.x = 0;
-    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+    floatOffset += floatDirection * 0.3;
+    if (floatOffset > 5 || floatOffset < -5) {
+        floatDirection *= -1;
+    }
+
+    tiltAngle += (targetTilt - tiltAngle) * 0.1;
+
+    ctx.save();
+    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + floatOffset);
+    ctx.rotate(tiltAngle * Math.PI / 180);
+    ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
+    ctx.restore();
 }
 
-// Function to draw the background ocean, stopping where the reef begins
-function drawBackground() {
-    let reefHeight = canvas.height * 0.3; // Reef takes up 30% of the screen height
-    let backgroundHeight = canvas.height - reefHeight; // Limit background height
-
-    ctx.drawImage(oceanBackground, 0, 0, canvas.width, backgroundHeight);
-}
-
-// Function to draw the reef, changing when health is low
+// Function to draw the reef
 function drawReef() {
-    let reefHeight = canvas.height * 0.3; // Reef size
-    let reefY = canvas.height - reefHeight; // Position at the bottom
+    let reefHeight = canvas.height * 0.3;
+    let reefY = canvas.height - reefHeight;
 
     if (reefHealth > 0) {
         ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
@@ -209,7 +191,7 @@ function drawStarfish() {
 // Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
     updateStarfish();
     drawStarfish();
@@ -217,6 +199,3 @@ function gameLoop() {
     drawHealthMeter();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
-
-// Start the game loop
-gameLoop();
