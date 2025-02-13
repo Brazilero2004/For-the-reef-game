@@ -34,6 +34,11 @@ damagedReefBackground.src = "20250212_203814.png"; // Replace with actual GitHub
 // Reef health system
 let reefHealth = 3; // Reef starts with full health
 
+// Starfish variables
+let starfishArray = []; // Array to store starfish
+let starfishSpeed = 1.5; // Starfish movement speed
+let spawnRate = 3000; // Spawn a new starfish every 3 seconds
+
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
     let reefHeight = canvas.height * 0.3; // Match reef height
@@ -144,19 +149,47 @@ function drawPlayer() {
     ctx.restore(); // Restore original state
 }
 
-// Function to simulate reef taking damage (for testing)
-setInterval(function() {
-    if (reefHealth > 0) {
-        reefHealth--; // Reduce health
+// Function to spawn starfish at random positions
+function spawnStarfish() {
+    let starfishSize = 30; // Size of starfish
+    let xPosition = Math.random() * (canvas.width - starfishSize); // Random X position
+
+    starfishArray.push({ x: xPosition, y: 0, size: starfishSize });
+}
+setInterval(spawnStarfish, spawnRate); // Spawn starfish every few seconds
+
+// Function to update starfish movement
+function updateStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        starfishArray[i].y += starfishSpeed; // Move down
+
+        // If starfish reaches the reef, it damages the reef
+        if (starfishArray[i].y + starfishArray[i].size >= canvas.height - canvas.height * 0.3) {
+            reefHealth--; // Reduce reef health
+            starfishArray.splice(i, 1); // Remove the starfish
+            i--; // Adjust index after removal
+        }
     }
-}, 10000); // Damage every 10 seconds
+}
+
+// Function to draw starfish
+function drawStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        ctx.fillStyle = "red"; // Temporary color (replace with image later)
+        ctx.beginPath();
+        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
 
 // Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground(); // Draw ocean first
-    drawReef();       // Draw reef on top
-    drawPlayer();     // Draw the bear on top of everything
+    drawBackground();
+    drawReef();
+    updateStarfish();
+    drawStarfish();
+    drawPlayer();
     requestAnimationFrame(gameLoop);
 }
 
