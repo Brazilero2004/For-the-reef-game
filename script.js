@@ -1,7 +1,6 @@
 let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext("2d");
 
-// ✅ Ensure the canvas resizes properly
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -9,7 +8,6 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-// ✅ Player Setup
 let player = {
     width: canvas.width * 0.15,  
     height: canvas.width * 0.15,  
@@ -17,10 +15,8 @@ let player = {
     img: new Image()
 };
 
-// ✅ Load player image with error handling
+// ✅ Load player image
 player.img.src = "1000084073-removebg-preview.png"; 
-player.img.onload = () => console.log("✅ Player image loaded.");
-player.img.onerror = () => console.error("❌ Error loading player image!");
 
 // ✅ Backgrounds
 let oceanBackground = new Image();
@@ -31,9 +27,6 @@ reefBackground.src = "Screenshot_20250212_120847_Chrome.png";
 
 let damagedReefBackground = new Image();
 damagedReefBackground.src = "20250212_203814.png"; 
-
-damagedReefBackground.onload = () => console.log("✅ Damaged reef image loaded.");
-damagedReefBackground.onerror = () => console.error("❌ Error loading damaged reef image!");
 
 // ✅ Reef Health System
 let maxReefHealth = 10; 
@@ -83,92 +76,63 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Auto-Shooting Bubbles
+// ✅ Auto-Shooting Bubbles (Continuous Stream)
 function startAutoShooting() {
     setInterval(() => {
-        let bubbleSize = 15; 
-        let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
-        let bubbleY = player.y; 
-        bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
-    }, 500);
+        let numBubbles = 3; // Shoots 3 bubbles at a time
+        let spread = 8; // Spread between bubbles
+
+        for (let i = 0; i < numBubbles; i++) {
+            let bubbleSize = 15 + Math.random() * 5; // Slight variation in size
+            let bubbleX = player.x + player.width / 2 - bubbleSize / 2 + (Math.random() * spread - spread / 2);
+            let bubbleY = player.y; 
+            let bubbleSpeedOffset = Math.random() * 1.5; // Random speed variation
+
+            bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize, speed: bubbleSpeed + bubbleSpeedOffset });
+        }
+    }, 250); // Faster shooting rate (every 0.25s)
 }
 
-// ✅ Move Bubbles
+// ✅ Move Bubbles (Wobble & Pop Effect)
 function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
-        bubbleArray[i].y -= bubbleSpeed; 
-        if (bubbleArray[i].y < 0) bubbleArray.splice(i, 1);
+        let bubble = bubbleArray[i];
+
+        bubble.y -= bubble.speed; // Move upward
+        bubble.x += Math.sin(bubble.y * 0.05) * 1.5; // Slight side wobble effect
+        bubble.size *= 0.99; // Slightly shrink over time
+
+        if (bubble.y < 0 || bubble.size < 5) { // "Pop" effect
+            bubbleArray.splice(i, 1);
+            i--;
+        }
     }
 }
 
-// ✅ Draw Bubbles
+// ✅ Draw Bubbles (Glowing Effect)
 function drawBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
-        ctx.fillStyle = "lightblue"; 
+        let bubble = bubbleArray[i];
+        let gradient = ctx.createRadialGradient(
+            bubble.x, bubble.y, bubble.size * 0.1,
+            bubble.x, bubble.y, bubble.size
+        );
+        
+        gradient.addColorStop(0, "rgba(173, 216, 230, 0.8)"); // Light blue center
+        gradient.addColorStop(0.5, "rgba(135, 206, 250, 0.6)"); // Softer blue
+        gradient.addColorStop(1, "rgba(255, 255, 255, 0.3)"); // White outer glow
+
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(bubbleArray[i].x, bubbleArray[i].y, bubbleArray[i].size, 0, Math.PI * 2);
+        ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tiny highlight
+        ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.beginPath();
+        ctx.arc(bubble.x - bubble.size * 0.3, bubble.y - bubble.size * 0.3, bubble.size * 0.2, 0, Math.PI * 2);
         ctx.fill();
     }
-}
-
-// ✅ Starfish Movement & Collision
-function updateStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
-        starfishArray[i].y += starfishSpeed;
-
-        for (let j = 0; j < bubbleArray.length; j++) {
-            let dx = bubbleArray[j].x - starfishArray[i].x;
-            let dy = bubbleArray[j].y - starfishArray[i].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < starfishArray[i].size / 2 + bubbleArray[j].size / 2) {
-                starfishArray.splice(i, 1);
-                bubbleArray.splice(j, 1);
-                break;
-            }
-        }
-
-        if (starfishArray[i]?.y + starfishArray[i]?.size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--;
-            starfishArray.splice(i, 1);
-            if (reefHealth <= 0) gameOver();
-        }
-    }
-}
-
-// ✅ Draw Starfish
-function drawStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red"; 
-        ctx.beginPath();
-        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-// ✅ Draw Health Bar
-function drawHealthMeter() {
-    let meterWidth = 200;
-    let meterHeight = 20;
-    let meterX = 20;
-    let meterY = 20;
-    
-    let healthPercent = reefHealth / maxReefHealth;
-    let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
-
-    ctx.fillStyle = "gray";
-    ctx.fillRect(meterX, meterY, meterWidth, meterHeight);
-    
-    ctx.fillStyle = meterColor;
-    ctx.fillRect(meterX, meterY, meterWidth * healthPercent, meterHeight);
-
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(meterX, meterY, meterWidth, meterHeight);
-}
-
-// ✅ Game Over
-function gameOver() {
-    alert("The reef has been destroyed! Refresh to play again.");
 }
 
 // ✅ Game Loop
@@ -176,19 +140,12 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
-    updateStarfish();
     updateBubbles();
     drawBubbles();
-    drawStarfish();
-    ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
-    drawHealthMeter();
+    drawPlayer();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
 // ✅ Start the game
-setInterval(() => {
-    starfishArray.push({ x: Math.random() * canvas.width, y: 0, size: 30 });
-}, spawnRate);
-
 gameLoop();
 startAutoShooting();
