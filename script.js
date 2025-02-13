@@ -39,8 +39,7 @@ let spawnRate = 2000;
 let bubbleArray = []; 
 let bubbleSpeed = 10; 
 
-// ✅ Difficulty Scaling
-let difficultyIncreaseRate = 30000; // 🔹 Increase difficulty every 30 seconds
+// ✅ Difficulty Scaling (Increased Intensity)
 let gameStartTime = Date.now();
 
 // ✅ Position Player at Bottom
@@ -98,7 +97,7 @@ function startAutoShooting() {
                 opacity: 1.0 
             });
         }
-    }, 200);
+    }, 150); // 🔹 Faster bubble shooting
 }
 
 // ✅ Move Bubbles (Higher Reach)
@@ -121,30 +120,21 @@ function updateBubbles() {
 function drawBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
-        let gradient = ctx.createRadialGradient(
-            bubble.x, bubble.y, bubble.size * 0.2,
-            bubble.x, bubble.y, bubble.size
-        );
-
-        gradient.addColorStop(0, `rgba(173, 216, 230, ${bubble.opacity})`); 
-        gradient.addColorStop(0.5, `rgba(135, 206, 250, ${bubble.opacity * 0.8})`);
-        gradient.addColorStop(1, `rgba(255, 255, 255, ${bubble.opacity * 0.5})`);
-
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = "lightblue";
         ctx.beginPath();
         ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
         ctx.fill();
     }
 }
 
-// ✅ Spawn & Move Starfish with Difficulty Scaling
+// ✅ Spawn & Move Starfish with Faster Scaling
 function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
     
-    // 🔹 Increase spawn rate gradually
-    let adjustedSpawnRate = Math.max(500, spawnRate - Math.floor(elapsedTime / 3000)); 
+    // 🔹 Increase spawn rate every 2 seconds (min: 300ms)
+    let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
 
-    let starfishSize = 30 + Math.min(10, Math.floor(elapsedTime / 20000)); 
+    let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000)); // 🔹 Increase size every 10s
     let xPosition = Math.random() * (canvas.width - starfishSize);
     starfishArray.push({ x: xPosition, y: -50, size: starfishSize });
 
@@ -155,8 +145,8 @@ setTimeout(spawnStarfish, spawnRate);
 function updateStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
     
-    // 🔹 Increase starfish speed gradually
-    let adjustedSpeed = starfishSpeed + Math.min(2, elapsedTime / 50000);
+    // 🔹 Increase starfish speed every 15 seconds
+    let adjustedSpeed = starfishSpeed + Math.min(4, elapsedTime / 15000);
 
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
@@ -199,7 +189,7 @@ function drawStarfish() {
     }
 }
 
-// ✅ Draw Player, Starfish & Health Meter
+// ✅ Draw Player & Health Meter
 function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
