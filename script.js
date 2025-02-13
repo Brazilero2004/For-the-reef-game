@@ -100,14 +100,17 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
-// Function to draw the background ocean
+// Function to draw the background ocean, stopping where the reef begins
 function drawBackground() {
-    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height); // Draw ocean
+    let reefHeight = canvas.height * 0.3; // Reef takes up 30% of the screen height
+    let backgroundHeight = canvas.height - reefHeight; // Limit background height
+
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, backgroundHeight);
 }
 
-// Function to draw the background reef
+// Function to draw the background reef, ensuring it aligns perfectly
 function drawReef() {
-    let reefHeight = canvas.height * 0.3; // Reef takes up 30% of screen height
+    let reefHeight = canvas.height * 0.3; // Reef size
     let reefY = canvas.height - reefHeight; // Position at the bottom
 
     ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
