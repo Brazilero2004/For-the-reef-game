@@ -45,6 +45,10 @@ let starfishArray = [];
 let starfishSpeed = 1.5; 
 let spawnRate = 3000; 
 
+// Bubble shooting variables
+let bubbleArray = []; 
+let bubbleSpeed = 4; 
+
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
     let reefHeight = canvas.height * 0.3; 
@@ -67,7 +71,7 @@ function drawReef() {
     let reefHeight = canvas.height * 0.3;
     let reefY = canvas.height - reefHeight;
 
-    console.log("Reef Health:", reefHealth); // Debug log
+    console.log("Reef Health:", reefHealth); 
 
     if (reefHealth > maxReefHealth * 0.5) {
         console.log("Displaying healthy reef.");
@@ -78,7 +82,7 @@ function drawReef() {
     }
 }
 
-// ✅ Fix: Re-enable player movement (Keyboard)
+// ✅ Player Movement (Keyboard)
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
         player.x -= player.speed * 10;
@@ -95,7 +99,7 @@ document.addEventListener("keyup", function(event) {
     }
 });
 
-// ✅ Fix: Enable smooth touch movement for mobile
+// ✅ Player Movement (Touchscreen)
 canvas.addEventListener("touchstart", function(event) {
     event.preventDefault(); 
     movePlayer(event.touches[0].clientX);
@@ -117,7 +121,71 @@ function movePlayer(touchX) {
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
-// Function to draw the player
+// ✅ Function to shoot bubbles
+function shootBubble() {
+    let bubbleSize = 15; 
+    let bubbleX = player.x + player.width / 2 - bubbleSize / 2; 
+    let bubbleY = player.y; 
+
+    bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize });
+}
+
+// ✅ Move bubbles upward
+function updateBubbles() {
+    for (let i = 0; i < bubbleArray.length; i++) {
+        bubbleArray[i].y -= bubbleSpeed; 
+
+        if (bubbleArray[i].y < 0) {
+            bubbleArray.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+// ✅ Draw bubbles
+function drawBubbles() {
+    for (let i = 0; i < bubbleArray.length; i++) {
+        ctx.fillStyle = "lightblue"; 
+        ctx.beginPath();
+        ctx.arc(bubbleArray[i].x, bubbleArray[i].y, bubbleArray[i].size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// ✅ Starfish take damage from bubbles
+function updateStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        starfishArray[i].y += starfishSpeed;
+
+        // Check if any bubble hits a starfish
+        for (let j = 0; j < bubbleArray.length; j++) {
+            let dx = bubbleArray[j].x - starfishArray[i].x;
+            let dy = bubbleArray[j].y - starfishArray[i].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < starfishArray[i].size / 2 + bubbleArray[j].size / 2) {
+                starfishArray.splice(i, 1);
+                bubbleArray.splice(j, 1);
+                i--; 
+                j--;
+                break;
+            }
+        }
+    }
+}
+
+// ✅ Player can shoot bubbles by pressing spacebar or tapping
+document.addEventListener("keydown", function(event) {
+    if (event.key === " ") { 
+        shootBubble();
+    }
+});
+canvas.addEventListener("touchstart", function(event) {
+    event.preventDefault(); 
+    shootBubble();
+});
+
+// ✅ Function to draw the player
 function drawPlayer() {
     floatOffset += floatDirection * 0.3;
     if (floatOffset > 5 || floatOffset < -5) {
@@ -133,63 +201,21 @@ function drawPlayer() {
     ctx.restore();
 }
 
-// Function to draw the health meter
-function drawHealthMeter() {
-    let meterWidth = 200;
-    let meterHeight = 20;
-    let meterX = 20;
-    let meterY = 20;
-    
-    let healthPercent = reefHealth / maxReefHealth;
-    let meterColor = "green";
-    if (healthPercent <= 0.6) meterColor = "yellow";
-    if (healthPercent <= 0.3) meterColor = "red";
-
-    ctx.fillStyle = "gray";
-    ctx.fillRect(meterX, meterY, meterWidth, meterHeight);
-    
-    ctx.fillStyle = meterColor;
-    ctx.fillRect(meterX, meterY, meterWidth * healthPercent, meterHeight);
-
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(meterX, meterY, meterWidth, meterHeight);
+// ✅ Game loop
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
+    drawReef();
+    updateStarfish();
+    updateBubbles();
+    drawBubbles();
+    drawStarfish();
+    drawPlayer();
+    drawHealthMeter();
+    if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
-// Function to handle game over
-function gameOver() {
-    cancelAnimationFrame(gameLoop);
-    setTimeout(() => {
-        let playAgain = confirm("The reef has been destroyed! Play again?");
-        if (playAgain) resetGame();
-    }, 500);
-}
-
-// Function to reset the game
-function resetGame() {
-    reefHealth = maxReefHealth;
-    starfishArray = [];
-    gameLoop();
-}
-
-// Function to update starfish movement
-function updateStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
-        starfishArray[i].y += starfishSpeed;
-
-        if (starfishArray[i].y + starfishArray[i].size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--;
-            starfishArray.splice(i, 1);
-            i--;
-
-            if (reefHealth <= 0) {
-                reefHealth = 0;
-                gameOver();
-            }
-        }
-    }
-}
-
-// Function to spawn starfish
+// ✅ Function to spawn starfish
 function spawnStarfish() {
     let starfishSize = 30;
     let xPosition = Math.random() * (canvas.width - starfishSize);
@@ -197,7 +223,7 @@ function spawnStarfish() {
 }
 setInterval(spawnStarfish, spawnRate);
 
-// Function to draw starfish
+// ✅ Function to draw starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         ctx.fillStyle = "red"; 
@@ -205,18 +231,6 @@ function drawStarfish() {
         ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
     }
-}
-
-// Main game loop
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
-    drawReef();
-    updateStarfish();
-    drawStarfish();
-    drawPlayer();
-    drawHealthMeter();
-    if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
 // Start the game loop
