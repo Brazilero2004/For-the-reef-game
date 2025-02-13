@@ -28,6 +28,12 @@ let reefBackground = new Image();
 reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; 
 
 let damagedReefBackground = new Image();
+damagedReefBackground.onload = function() {
+    console.log("Damaged reef image loaded successfully.");
+};
+damagedReefBackground.onerror = function() {
+    console.error("Error loading damaged reef image!");
+};
 damagedReefBackground.src = "20250212_203814.png"; 
 
 // Reef health system
@@ -61,9 +67,13 @@ function drawReef() {
     let reefHeight = canvas.height * 0.3;
     let reefY = canvas.height - reefHeight;
 
+    console.log("Reef Health:", reefHealth); // Debug log
+
     if (reefHealth > maxReefHealth * 0.5) {
+        console.log("Displaying healthy reef.");
         ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
     } else {
+        console.log("Displaying damaged reef.");
         ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
     }
 }
