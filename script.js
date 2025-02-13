@@ -17,6 +17,8 @@ let player = {
 
 // ✅ Load player image
 player.img.src = "1000084073-removebg-preview.png"; 
+player.img.onload = () => console.log("✅ Player image loaded.");
+player.img.onerror = () => console.error("❌ Error loading player image!");
 
 // ✅ Backgrounds
 let oceanBackground = new Image();
@@ -27,6 +29,9 @@ reefBackground.src = "Screenshot_20250212_120847_Chrome.png";
 
 let damagedReefBackground = new Image();
 damagedReefBackground.src = "20250212_203814.png"; 
+
+damagedReefBackground.onload = () => console.log("✅ Damaged reef image loaded.");
+damagedReefBackground.onerror = () => console.error("❌ Error loading damaged reef image!");
 
 // ✅ Reef Health System
 let maxReefHealth = 10; 
@@ -133,13 +138,12 @@ function drawBubbles() {
         ctx.beginPath();
         ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
         ctx.fill();
-
-        // Tiny highlight for more realism
-        ctx.fillStyle = `rgba(255, 255, 255, ${bubble.opacity})`;
-        ctx.beginPath();
-        ctx.arc(bubble.x - bubble.size * 0.3, bubble.y - bubble.size * 0.3, bubble.size * 0.2, 0, Math.PI * 2);
-        ctx.fill();
     }
+}
+
+// ✅ Draw Player
+function drawPlayer() {
+    ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
 
 // ✅ Game Loop
