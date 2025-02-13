@@ -24,9 +24,15 @@ player.img.src = "1000084073-removebg-preview.png"; // Replace with actual GitHu
 let oceanBackground = new Image();
 oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; // Replace with actual GitHub image URL
 
-// Load updated reef background image
+// Load reef images (healthy and damaged)
 let reefBackground = new Image();
 reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; // Replace with actual GitHub image URL
+
+let damagedReefBackground = new Image();
+damagedReefBackground.src = "20250212_203814.png"; // Replace with actual GitHub image URL
+
+// Reef health system
+let reefHealth = 3; // Reef starts with full health
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
@@ -108,12 +114,16 @@ function drawBackground() {
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, backgroundHeight);
 }
 
-// Function to draw the background reef, ensuring it aligns perfectly
+// Function to draw the reef, changing when health is low
 function drawReef() {
     let reefHeight = canvas.height * 0.3; // Reef size
     let reefY = canvas.height - reefHeight; // Position at the bottom
 
-    ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
+    if (reefHealth > 0) {
+        ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
+    } else {
+        ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
+    }
 }
 
 // Function to draw the player with bobbing and tilt animation
@@ -133,6 +143,13 @@ function drawPlayer() {
     ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore(); // Restore original state
 }
+
+// Function to simulate reef taking damage (for testing)
+setInterval(function() {
+    if (reefHealth > 0) {
+        reefHealth--; // Reduce health
+    }
+}, 10000); // Damage every 10 seconds
 
 // Main game loop
 function gameLoop() {
