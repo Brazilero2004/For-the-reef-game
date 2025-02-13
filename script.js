@@ -16,8 +16,6 @@ let player = {
     img: new Image()
 };
 player.img.src = "1000084073-removebg-preview.png"; 
-player.img.onload = () => console.log("✅ Player image loaded.");
-player.img.onerror = () => console.error("❌ Error loading player image!");
 
 // ✅ Load Backgrounds
 let oceanBackground = new Image();
@@ -36,10 +34,10 @@ let reefHealth = maxReefHealth;
 // ✅ Starfish & Bubbles
 let starfishArray = []; 
 let starfishSpeed = 1.5; 
-let spawnRate = 2000; // 🔹 Starfish now spawn every 2 seconds
+let spawnRate = 2000;
 
 let bubbleArray = []; 
-let bubbleSpeed = 10; // 🔹 Increased speed so bubbles travel higher
+let bubbleSpeed = 10; 
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
@@ -104,11 +102,11 @@ function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
 
-        bubble.y -= bubble.speed; // Move upward faster
-        bubble.x += Math.sin(bubble.y * 0.05) * 2; // Wobble effect
-        bubble.opacity -= 0.015; // Slower fade-out
+        bubble.y -= bubble.speed;
+        bubble.x += Math.sin(bubble.y * 0.05) * 2;
+        bubble.opacity -= 0.015;
 
-        if (bubble.y < -50 || bubble.opacity <= 0) { // 🔹 Lifespan extended to allow higher reach
+        if (bubble.y < -50 || bubble.opacity <= 0) {
             bubbleArray.splice(i, 1);
             i--;
         }
@@ -139,25 +137,45 @@ function drawBubbles() {
 function spawnStarfish() {
     let starfishSize = 30;
     let xPosition = Math.random() * (canvas.width - starfishSize);
-    starfishArray.push({ x: xPosition, y: -50, size: starfishSize }); // 🔹 Start slightly off-screen
+    starfishArray.push({ x: xPosition, y: -50, size: starfishSize });
 }
 setInterval(spawnStarfish, spawnRate);
 
+// ✅ Updated: Starfish Collision with Bubbles
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
-        starfish.y += starfishSpeed; 
+        starfish.y += starfishSpeed;
+
+        // 🔹 Check for collision with bubbles
+        for (let j = 0; j < bubbleArray.length; j++) {
+            let bubble = bubbleArray[j];
+
+            let dx = bubble.x - starfish.x;
+            let dy = bubble.y - starfish.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < starfish.size / 2 + bubble.size / 2) {
+                // 🔹 Remove both the starfish and the bubble upon collision
+                starfishArray.splice(i, 1);
+                bubbleArray.splice(j, 1);
+                i--; // Adjust index after removal
+                break;
+            }
+        }
 
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--;
             starfishArray.splice(i, 1);
-            i--;
+            i--; 
+
             if (reefHealth <= 0) gameOver();
         }
     }
 }
 
+// ✅ Draw Starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         ctx.fillStyle = "red"; // 🔹 Temporary color until images are used
