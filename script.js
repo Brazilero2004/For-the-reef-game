@@ -73,41 +73,26 @@ document.addEventListener("keyup", function(event) {
     }
 });
 
-// ✅ Fix: Re-enable player movement (Touchscreen)
-let isTouching = false;
-
+// ✅ Fix: Enable smooth touch movement for mobile
 canvas.addEventListener("touchstart", function(event) {
-    isTouching = true;
+    event.preventDefault(); // Prevent scrolling while touching
     movePlayer(event.touches[0].clientX);
 });
 
 canvas.addEventListener("touchmove", function(event) {
-    if (isTouching) {
-        movePlayer(event.touches[0].clientX);
-    }
+    event.preventDefault();
+    movePlayer(event.touches[0].clientX);
 });
 
-canvas.addEventListener("touchend", function() {
-    isTouching = false;
-});
-
-// Function to move the player smoothly
+// Function to move the player smoothly based on touch position
 function movePlayer(touchX) {
     let canvasRect = canvas.getBoundingClientRect();
     let canvasX = touchX - canvasRect.left;
 
-    let moveSpeed = player.speed * 15; 
+    // Move directly to the touched position
+    player.x = canvasX - player.width / 2;
 
-    if (canvasX < player.x) {
-        player.x -= moveSpeed; 
-        targetTilt = -10;
-    } else if (canvasX > player.x + player.width) {
-        player.x += moveSpeed; 
-        targetTilt = 10;
-    } else {
-        targetTilt = 0; 
-    }
-
+    // Prevent the player from moving off-screen
     if (player.x < 0) player.x = 0;
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
