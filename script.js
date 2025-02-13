@@ -17,8 +17,6 @@ let player = {
 
 // ✅ Load player image
 player.img.src = "1000084073-removebg-preview.png"; 
-player.img.onload = () => console.log("✅ Player image loaded.");
-player.img.onerror = () => console.error("❌ Error loading player image!");
 
 // ✅ Backgrounds
 let oceanBackground = new Image();
@@ -29,9 +27,6 @@ reefBackground.src = "Screenshot_20250212_120847_Chrome.png";
 
 let damagedReefBackground = new Image();
 damagedReefBackground.src = "20250212_203814.png"; 
-
-damagedReefBackground.onload = () => console.log("✅ Damaged reef image loaded.");
-damagedReefBackground.onerror = () => console.error("❌ Error loading damaged reef image!");
 
 // ✅ Reef Health System
 let maxReefHealth = 10; 
@@ -81,17 +76,17 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Auto-Shooting Bubbles (Continuous Stream)
+// ✅ Auto-Shooting Bubbles (Fixed Version)
 function startAutoShooting() {
     setInterval(() => {
-        let numBubbles = 5; // Shoots 5 bubbles at a time
-        let spread = 20; // Wider spread
+        let numBubbles = 4; // Shoots 4 bubbles at a time (adjusted)
+        let spread = 15; // Spread effect
 
         for (let i = 0; i < numBubbles; i++) {
-            let bubbleSize = 12 + Math.random() * 8; // Randomized size
+            let bubbleSize = 10 + Math.random() * 6; // Randomized size
             let bubbleX = player.x + player.width / 2 - bubbleSize / 2 + (Math.random() * spread - spread / 2);
             let bubbleY = player.y; 
-            let bubbleSpeedOffset = Math.random() * 2; // Different speeds
+            let bubbleSpeedOffset = Math.random() * 1.5; // Different speeds
 
             bubbleArray.push({ 
                 x: bubbleX, 
@@ -101,38 +96,37 @@ function startAutoShooting() {
                 opacity: 1.0 // Full opacity at first
             });
         }
-    }, 150); // Fires much faster (every 0.15s)
+    }, 200); // Slightly slowed down (every 0.2s)
 }
 
-// ✅ Move Bubbles (Wobble & Pop Effect)
+// ✅ Move Bubbles (Fixed Version)
 function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
 
         bubble.y -= bubble.speed; // Move upward
-        bubble.x += Math.sin(bubble.y * 0.08) * 2; // Increased side wobble effect
-        bubble.size *= 0.995; // Slightly shrink over time
-        bubble.opacity -= 0.01; // Fade out slightly
+        bubble.x += Math.sin(bubble.y * 0.05) * 1.8; // Slight wobble
+        bubble.opacity -= 0.02; // Fade out effect
 
-        if (bubble.y < 0 || bubble.size < 6 || bubble.opacity <= 0) { // "Pop" effect
+        if (bubble.y < 0 || bubble.opacity <= 0) { // "Pop" effect
             bubbleArray.splice(i, 1);
             i--;
         }
     }
 }
 
-// ✅ Draw Bubbles (Glowing Effect)
+// ✅ Draw Bubbles (Fixed Version)
 function drawBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
         let gradient = ctx.createRadialGradient(
-            bubble.x, bubble.y, bubble.size * 0.1,
+            bubble.x, bubble.y, bubble.size * 0.2,
             bubble.x, bubble.y, bubble.size
         );
 
-        gradient.addColorStop(0, `rgba(173, 216, 230, ${bubble.opacity})`); // Light blue center
-        gradient.addColorStop(0.5, `rgba(135, 206, 250, ${bubble.opacity * 0.8})`); // Softer blue
-        gradient.addColorStop(1, `rgba(255, 255, 255, ${bubble.opacity * 0.5})`); // White outer glow
+        gradient.addColorStop(0, `rgba(173, 216, 230, ${bubble.opacity})`); 
+        gradient.addColorStop(0.5, `rgba(135, 206, 250, ${bubble.opacity * 0.8})`);
+        gradient.addColorStop(1, `rgba(255, 255, 255, ${bubble.opacity * 0.5})`);
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -157,6 +151,6 @@ function gameLoop() {
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
-// ✅ Start the game
+// ✅ Start the game (Fixed)
 gameLoop();
 startAutoShooting();
