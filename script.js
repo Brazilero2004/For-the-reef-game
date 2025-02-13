@@ -17,20 +17,13 @@ let player = {
     img: new Image()
 };
 
-// ✅ Fix: Ensure the player image loads fully before starting the game
-player.img.onload = function () {
-    console.log("Polar bear image loaded successfully.");
-};
-player.img.onerror = function () {
-    console.error("Error loading polar bear image!");
-};
-player.img.src = "1000084073-removebg-preview.png"; // Ensure this URL is correct
+// Ensure the player image loads before starting
+player.img.src = "1000084073-removebg-preview.png"; 
 
-// Load updated ocean background image
+// Load background images
 let oceanBackground = new Image();
 oceanBackground.src = "Screenshot_20250212_201625_Gallery.png"; 
 
-// Load reef images (healthy and damaged)
 let reefBackground = new Image();
 reefBackground.src = "Screenshot_20250212_120847_Chrome.png"; 
 
@@ -45,24 +38,6 @@ let reefHealth = maxReefHealth;
 let starfishArray = []; 
 let starfishSpeed = 1.5; 
 let spawnRate = 3000; 
-
-// ✅ Fix: Ensure game only starts after images load
-let imagesLoaded = 0;
-let totalImages = 4; 
-
-function imageLoaded() {
-    imagesLoaded++;
-    if (imagesLoaded === totalImages) {
-        console.log("All images loaded. Starting game...");
-        gameLoop();
-    }
-}
-
-// Ensure all images are fully loaded before game starts
-oceanBackground.onload = imageLoaded;
-reefBackground.onload = imageLoaded;
-damagedReefBackground.onload = imageLoaded;
-player.img.onload = imageLoaded;
 
 // Position the player at the bottom center of the screen
 function resetPlayerPosition() {
@@ -81,13 +56,64 @@ let floatDirection = 1;
 let tiltAngle = 0;
 let targetTilt = 0;
 
-// Function to draw the player
-function drawPlayer() {
-    if (!player.img.complete) {
-        console.log("Waiting for player image to load...");
-        return;
+// ✅ Fix: Re-enable player movement (Keyboard)
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowLeft" && player.x > 0) {
+        player.x -= player.speed * 10;
+        targetTilt = -10; 
+    } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
+        player.x += player.speed * 10;
+        targetTilt = 10; 
+    }
+});
+
+document.addEventListener("keyup", function(event) {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        targetTilt = 0; 
+    }
+});
+
+// ✅ Fix: Re-enable player movement (Touchscreen)
+let isTouching = false;
+
+canvas.addEventListener("touchstart", function(event) {
+    isTouching = true;
+    movePlayer(event.touches[0].clientX);
+});
+
+canvas.addEventListener("touchmove", function(event) {
+    if (isTouching) {
+        movePlayer(event.touches[0].clientX);
+    }
+});
+
+canvas.addEventListener("touchend", function() {
+    isTouching = false;
+});
+
+// Function to move the player smoothly
+function movePlayer(touchX) {
+    let canvasRect = canvas.getBoundingClientRect();
+    let canvasX = touchX - canvasRect.left;
+
+    let moveSpeed = player.speed * 15; 
+
+    if (canvasX < player.x) {
+        player.x -= moveSpeed; 
+        targetTilt = -10;
+    } else if (canvasX > player.x + player.width) {
+        player.x += moveSpeed; 
+        targetTilt = 10;
+    } else {
+        targetTilt = 0; 
     }
 
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+}
+
+// Function to draw the player
+function drawPlayer() {
     floatOffset += floatDirection * 0.3;
     if (floatOffset > 5 || floatOffset < -5) {
         floatDirection *= -1;
@@ -181,7 +207,7 @@ setInterval(spawnStarfish, spawnRate);
 // Function to draw starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "red"; // Temporary placeholder
         ctx.beginPath();
         ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
@@ -199,3 +225,6 @@ function gameLoop() {
     drawHealthMeter();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
+
+// Start the game loop
+gameLoop();
