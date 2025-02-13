@@ -32,7 +32,8 @@ let damagedReefBackground = new Image();
 damagedReefBackground.src = "20250212_203814.png"; // Replace with actual GitHub image URL
 
 // Reef health system
-let reefHealth = 3; // Reef starts with full health
+let maxReefHealth = 10; // Maximum reef health
+let reefHealth = maxReefHealth; // Current reef health
 
 // Starfish variables
 let starfishArray = []; // Array to store starfish
@@ -131,51 +132,74 @@ function drawReef() {
     }
 }
 
-// Function to draw the player with bobbing and tilt animation
-function drawPlayer() {
-    // Make the bear float up and down slightly
-    floatOffset += floatDirection * 0.3;
-    if (floatOffset > 5 || floatOffset < -5) {
-        floatDirection *= -1;
-    }
+// Function to draw the health meter
+function drawHealthMeter() {
+    let meterWidth = 200;
+    let meterHeight = 20;
+    let meterX = 20;
+    let meterY = 20;
+    
+    let healthPercent = reefHealth / maxReefHealth;
+    let meterColor = "green";
+    if (healthPercent <= 0.6) meterColor = "yellow";
+    if (healthPercent <= 0.3) meterColor = "red";
 
-    // Smooth tilt animation
-    tiltAngle += (targetTilt - tiltAngle) * 0.1;
+    ctx.fillStyle = "gray";
+    ctx.fillRect(meterX, meterY, meterWidth, meterHeight);
+    
+    ctx.fillStyle = meterColor;
+    ctx.fillRect(meterX, meterY, meterWidth * healthPercent, meterHeight);
 
-    ctx.save(); // Save the current drawing state
-    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + floatOffset);
-    ctx.rotate(tiltAngle * Math.PI / 180); // Apply tilt rotation
-    ctx.drawImage(player.img, -player.width / 2, -player.height / 2, player.width, player.height);
-    ctx.restore(); // Restore original state
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(meterX, meterY, meterWidth, meterHeight);
 }
 
-// Function to spawn starfish at random positions
-function spawnStarfish() {
-    let starfishSize = 30; // Size of starfish
-    let xPosition = Math.random() * (canvas.width - starfishSize); // Random X position
-
-    starfishArray.push({ x: xPosition, y: 0, size: starfishSize });
+// Function to handle game over
+function gameOver() {
+    cancelAnimationFrame(gameLoop);
+    setTimeout(() => {
+        let playAgain = confirm("The reef has been destroyed! Play again?");
+        if (playAgain) resetGame();
+    }, 500);
 }
-setInterval(spawnStarfish, spawnRate); // Spawn starfish every few seconds
+
+// Function to reset the game
+function resetGame() {
+    reefHealth = maxReefHealth;
+    starfishArray = [];
+    gameLoop();
+}
 
 // Function to update starfish movement
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        starfishArray[i].y += starfishSpeed; // Move down
+        starfishArray[i].y += starfishSpeed;
 
-        // If starfish reaches the reef, it damages the reef
         if (starfishArray[i].y + starfishArray[i].size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--; // Reduce reef health
-            starfishArray.splice(i, 1); // Remove the starfish
-            i--; // Adjust index after removal
+            reefHealth--;
+            starfishArray.splice(i, 1);
+            i--;
+
+            if (reefHealth <= 0) {
+                reefHealth = 0;
+                gameOver();
+            }
         }
     }
 }
 
+// Function to spawn starfish
+function spawnStarfish() {
+    let starfishSize = 30;
+    let xPosition = Math.random() * (canvas.width - starfishSize);
+    starfishArray.push({ x: xPosition, y: 0, size: starfishSize });
+}
+setInterval(spawnStarfish, spawnRate);
+
 // Function to draw starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red"; // Temporary color (replace with image later)
+        ctx.fillStyle = "red";
         ctx.beginPath();
         ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
@@ -190,7 +214,8 @@ function gameLoop() {
     updateStarfish();
     drawStarfish();
     drawPlayer();
-    requestAnimationFrame(gameLoop);
+    drawHealthMeter();
+    if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
 // Start the game loop
