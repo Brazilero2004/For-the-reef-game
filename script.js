@@ -79,18 +79,24 @@ canvas.addEventListener("touchmove", function(event) {
 // ✅ Auto-Shooting Bubbles (Continuous Stream)
 function startAutoShooting() {
     setInterval(() => {
-        let numBubbles = 3; // Shoots 3 bubbles at a time
-        let spread = 8; // Spread between bubbles
+        let numBubbles = 5; // Shoots 5 bubbles at a time
+        let spread = 20; // Wider spread
 
         for (let i = 0; i < numBubbles; i++) {
-            let bubbleSize = 15 + Math.random() * 5; // Slight variation in size
+            let bubbleSize = 12 + Math.random() * 8; // Randomized size
             let bubbleX = player.x + player.width / 2 - bubbleSize / 2 + (Math.random() * spread - spread / 2);
             let bubbleY = player.y; 
-            let bubbleSpeedOffset = Math.random() * 1.5; // Random speed variation
+            let bubbleSpeedOffset = Math.random() * 2; // Different speeds
 
-            bubbleArray.push({ x: bubbleX, y: bubbleY, size: bubbleSize, speed: bubbleSpeed + bubbleSpeedOffset });
+            bubbleArray.push({ 
+                x: bubbleX, 
+                y: bubbleY, 
+                size: bubbleSize, 
+                speed: bubbleSpeed + bubbleSpeedOffset,
+                opacity: 1.0 // Full opacity at first
+            });
         }
-    }, 250); // Faster shooting rate (every 0.25s)
+    }, 150); // Fires much faster (every 0.15s)
 }
 
 // ✅ Move Bubbles (Wobble & Pop Effect)
@@ -99,10 +105,11 @@ function updateBubbles() {
         let bubble = bubbleArray[i];
 
         bubble.y -= bubble.speed; // Move upward
-        bubble.x += Math.sin(bubble.y * 0.05) * 1.5; // Slight side wobble effect
-        bubble.size *= 0.99; // Slightly shrink over time
+        bubble.x += Math.sin(bubble.y * 0.08) * 2; // Increased side wobble effect
+        bubble.size *= 0.995; // Slightly shrink over time
+        bubble.opacity -= 0.01; // Fade out slightly
 
-        if (bubble.y < 0 || bubble.size < 5) { // "Pop" effect
+        if (bubble.y < 0 || bubble.size < 6 || bubble.opacity <= 0) { // "Pop" effect
             bubbleArray.splice(i, 1);
             i--;
         }
@@ -117,18 +124,18 @@ function drawBubbles() {
             bubble.x, bubble.y, bubble.size * 0.1,
             bubble.x, bubble.y, bubble.size
         );
-        
-        gradient.addColorStop(0, "rgba(173, 216, 230, 0.8)"); // Light blue center
-        gradient.addColorStop(0.5, "rgba(135, 206, 250, 0.6)"); // Softer blue
-        gradient.addColorStop(1, "rgba(255, 255, 255, 0.3)"); // White outer glow
+
+        gradient.addColorStop(0, `rgba(173, 216, 230, ${bubble.opacity})`); // Light blue center
+        gradient.addColorStop(0.5, `rgba(135, 206, 250, ${bubble.opacity * 0.8})`); // Softer blue
+        gradient.addColorStop(1, `rgba(255, 255, 255, ${bubble.opacity * 0.5})`); // White outer glow
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Tiny highlight
-        ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+        // Tiny highlight for more realism
+        ctx.fillStyle = `rgba(255, 255, 255, ${bubble.opacity})`;
         ctx.beginPath();
         ctx.arc(bubble.x - bubble.size * 0.3, bubble.y - bubble.size * 0.3, bubble.size * 0.2, 0, Math.PI * 2);
         ctx.fill();
