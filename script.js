@@ -93,7 +93,7 @@ canvas.addEventListener("touchmove", function(event) {
 
 // ✅ Power-Up Spawning
 function spawnPowerUp() {
-    if (Date.now() - lastPowerUpTime > 30000 && !powerUp) {
+    if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
         powerUp = { x: Math.random() * canvas.width, y: canvas.height * 0.2, size: 40 };
         lastPowerUpTime = Date.now();
     }
@@ -195,7 +195,7 @@ function drawPowerUp() {
     }
 }
 
-// ✅ Game Loop
+// ✅ Game Loop (Fixed)
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
@@ -206,9 +206,10 @@ function gameLoop() {
     updateStarfish();
     drawStarfish();
     drawPlayer();
+    spawnPowerUp(); // 🔹 Ensure power-ups keep appearing
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
-// ✅ Start Game
+// ✅ Start Game (Fixed)
 gameLoop();
 startAutoShooting();
