@@ -80,7 +80,7 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Power-Up Spawning
+// ✅ Power-Up Spawning (Fixed)
 function spawnPowerUp() {
     if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
         powerUp = { x: Math.random() * (canvas.width - 40), y: Math.random() * (canvas.height * 0.5), size: 40 };
@@ -88,7 +88,7 @@ function spawnPowerUp() {
     }
 }
 
-// ✅ Power-Up Collection
+// ✅ Power-Up Collection (Fixed)
 function checkPowerUpCollision() {
     if (powerUp) {
         let dx = player.x + player.width / 2 - powerUp.x;
@@ -126,7 +126,7 @@ function startAutoShooting() {
     }, 150);
 }
 
-// ✅ Spawn Different Starfish Types
+// ✅ Spawn Different Starfish Types (Fixed)
 function spawnStarfish() {
     let starfishType = Math.random();
     let size = 30;
@@ -144,7 +144,7 @@ function spawnStarfish() {
 }
 setInterval(spawnStarfish, spawnRate);
 
-// ✅ Updated: Starfish Movement & Collision
+// ✅ Updated: Starfish Movement & Collision (Fixed)
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
