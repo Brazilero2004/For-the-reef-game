@@ -13,7 +13,7 @@ let player = {
     width: canvas.width * 0.15,  
     height: canvas.width * 0.15,  
     speed: canvas.width * 0.007, 
-    floatOffset: 0,  // 🔹 Floating effect
+    floatOffset: 0,  
     floatDirection: 1,
     img: new Image()
 };
