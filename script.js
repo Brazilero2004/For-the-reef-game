@@ -57,17 +57,6 @@ function resetPlayerPosition() {
 window.addEventListener("resize", resetPlayerPosition);
 resetPlayerPosition();
 
-// ✅ Draw Reef (Switches When Health < 50%)
-function drawReef() {
-    let reefHeight = canvas.height * 0.3;
-    let reefY = canvas.height - reefHeight;
-    if (reefHealth > maxReefHealth * 0.5) {
-        ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
-    } else {
-        ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
-    }
-}
-
 // ✅ Floating Effect for Polar Bear
 function updateFloatingBear() {
     player.floatOffset += player.floatDirection * 0.5;
@@ -94,7 +83,7 @@ canvas.addEventListener("touchmove", function(event) {
 // ✅ Power-Up Spawning
 function spawnPowerUp() {
     if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
-        powerUp = { x: Math.random() * canvas.width, y: canvas.height * 0.2, size: 40 };
+        powerUp = { x: Math.random() * (canvas.width - 40), y: Math.random() * (canvas.height * 0.5), size: 40 };
         lastPowerUpTime = Date.now();
     }
 }
@@ -159,7 +148,7 @@ setInterval(spawnStarfish, spawnRate);
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
-        starfish.y += starfish.speed;
+        starfish.y += starfish.speed || starfishSpeed;
 
         for (let j = 0; j < bubbleArray.length; j++) {
             let bubble = bubbleArray[j];
@@ -206,7 +195,7 @@ function gameLoop() {
     updateStarfish();
     drawStarfish();
     drawPlayer();
-    spawnPowerUp(); // 🔹 Ensure power-ups keep appearing
+    spawnPowerUp();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
