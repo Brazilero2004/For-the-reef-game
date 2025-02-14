@@ -91,30 +91,7 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Power-Up Spawning (Fixed)
-function spawnPowerUp() {
-    if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
-        powerUp = { x: Math.random() * (canvas.width - 40), y: Math.random() * (canvas.height * 0.5), size: 40 };
-        lastPowerUpTime = Date.now();
-    }
-}
-
-// ✅ Power-Up Collection (Fixed)
-function checkPowerUpCollision() {
-    if (powerUp) {
-        let dx = player.x + player.width / 2 - powerUp.x;
-        let dy = player.y - powerUp.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 40) {
-            powerUp = null;
-            powerUpActive = true;
-            setTimeout(() => powerUpActive = false, powerUpDuration);
-        }
-    }
-}
-
-// ✅ Auto-Shooting Bubbles (Fixed)
+// ✅ Auto-Shooting Bubbles
 function startAutoShooting() {
     setInterval(() => {
         let numBubbles = powerUpActive ? 10 : 4;
@@ -137,7 +114,7 @@ function startAutoShooting() {
     }, 150);
 }
 
-// ✅ Spawn Different Starfish Types (Fixed)
+// ✅ Spawn & Move Starfish
 function spawnStarfish() {
     let starfishType = Math.random();
     let size = 30;
@@ -155,7 +132,7 @@ function spawnStarfish() {
 }
 setInterval(spawnStarfish, spawnRate);
 
-// ✅ Updated: Starfish Movement & Collision (Fixed)
+// ✅ Updated: Starfish Movement & Collision
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
@@ -185,14 +162,32 @@ function updateStarfish() {
     }
 }
 
-// ✅ Draw Power-Up
-function drawPowerUp() {
-    if (powerUp) {
-        ctx.fillStyle = "gold";
+// ✅ Draw Player & Starfish
+function drawPlayer() {
+    ctx.drawImage(player.img, player.x, player.y + player.floatOffset, player.width, player.height);
+}
+
+function drawStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        ctx.fillStyle = "red"; 
         ctx.beginPath();
-        ctx.arc(powerUp.x, powerUp.y, powerUp.size, 0, Math.PI * 2);
+        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
         ctx.fill();
     }
+}
+
+// ✅ Draw Health Meter
+function drawHealthMeter() {
+    let healthPercent = reefHealth / maxReefHealth;
+    let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
+
+    ctx.fillStyle = meterColor;
+    ctx.fillRect(20, 20, 200 * healthPercent, 20);
+}
+
+// ✅ Game Over
+function gameOver() {
+    alert("The reef has been destroyed! Refresh to play again.");
 }
 
 // ✅ Game Loop (Fixed)
@@ -201,12 +196,10 @@ function gameLoop() {
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
     updateFloatingBear();
-    drawPowerUp();
-    checkPowerUpCollision();
     updateStarfish();
     drawStarfish();
+    drawHealthMeter();
     drawPlayer();
-    spawnPowerUp();
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
