@@ -46,7 +46,6 @@ let powerUp = null;
 let powerUpActive = false;
 let powerUpDuration = 10000;
 let lastPowerUpTime = 0;
-let gameStartTime = Date.now();
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
@@ -91,10 +90,10 @@ canvas.addEventListener("touchmove", function(event) {
     player.x = touchX - player.width / 2;
 });
 
-// ✅ Auto-Shooting Bubbles
+// ✅ Auto-Shooting Bubbles (Fixed)
 function startAutoShooting() {
     setInterval(() => {
-        let numBubbles = powerUpActive ? 10 : 4;
+        let numBubbles = powerUpActive ? 10 : 4; // 🔹 Power-up increases bubbles
         let spread = 15; 
 
         for (let i = 0; i < numBubbles; i++) {
@@ -114,7 +113,30 @@ function startAutoShooting() {
     }, 150);
 }
 
-// ✅ Spawn & Move Starfish
+// ✅ Power-Up Spawning (Fixed)
+function spawnPowerUp() {
+    if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
+        powerUp = { x: Math.random() * (canvas.width - 40), y: Math.random() * (canvas.height * 0.5), size: 40 };
+        lastPowerUpTime = Date.now();
+    }
+}
+
+// ✅ Power-Up Collection (Fixed)
+function checkPowerUpCollision() {
+    if (powerUp) {
+        let dx = player.x + player.width / 2 - powerUp.x;
+        let dy = player.y - powerUp.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 40) {
+            powerUp = null;
+            powerUpActive = true;
+            setTimeout(() => powerUpActive = false, powerUpDuration);
+        }
+    }
+}
+
+// ✅ Spawn & Move Starfish (Reef Now Takes Damage)
 function spawnStarfish() {
     let starfishType = Math.random();
     let size = 30;
@@ -132,29 +154,13 @@ function spawnStarfish() {
 }
 setInterval(spawnStarfish, spawnRate);
 
-// ✅ Updated: Starfish Movement & Collision
 function updateStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
-        starfish.y += starfish.speed || starfishSpeed;
-
-        for (let j = 0; j < bubbleArray.length; j++) {
-            let bubble = bubbleArray[j];
-
-            let dx = bubble.x - starfish.x;
-            let dy = bubble.y - starfish.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < starfish.size / 2 + bubble.size / 2) {
-                starfishArray.splice(i, 1);
-                bubbleArray.splice(j, 1);
-                i--;
-                break;
-            }
-        }
+        starfish.y += starfish.speed;
 
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--;
+            reefHealth--; // ✅ Now damages the reef
             starfishArray.splice(i, 1);
             i--; 
             if (reefHealth <= 0) gameOver();
@@ -196,6 +202,8 @@ function gameLoop() {
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
     updateFloatingBear();
+    spawnPowerUp();
+    checkPowerUpCollision();
     updateStarfish();
     drawStarfish();
     drawHealthMeter();
