@@ -65,6 +65,17 @@ function updateFloatingBear() {
     }
 }
 
+// ✅ Draw Reef (Fixed)
+function drawReef() {
+    let reefHeight = canvas.height * 0.3;
+    let reefY = canvas.height - reefHeight;
+    if (reefHealth > maxReefHealth * 0.5) {
+        ctx.drawImage(reefBackground, 0, reefY, canvas.width, reefHeight);
+    } else {
+        ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
+    }
+}
+
 // ✅ Player Movement (Keyboard & Touch)
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
@@ -103,7 +114,7 @@ function checkPowerUpCollision() {
     }
 }
 
-// ✅ Auto-Shooting Bubbles (Power-Up Enabled)
+// ✅ Auto-Shooting Bubbles (Fixed)
 function startAutoShooting() {
     setInterval(() => {
         let numBubbles = powerUpActive ? 10 : 4;
