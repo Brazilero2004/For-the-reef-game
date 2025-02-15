@@ -64,7 +64,7 @@ function updateFloatingBear() {
     }
 }
 
-// ✅ Draw Reef (Fixed)
+// ✅ Draw Reef
 function drawReef() {
     let reefHeight = canvas.height * 0.3;
     let reefY = canvas.height - reefHeight;
@@ -110,29 +110,33 @@ function startAutoShooting() {
                 opacity: 1.0 
             });
         }
-    }, 150);
+    }, powerUpActive ? 100 : 200); // 🔹 Faster bubbles when power-up is active
 }
 
-// ✅ Power-Up Spawning (Fixed)
-function spawnPowerUp() {
-    if (!powerUp && Date.now() - lastPowerUpTime > 30000) {
-        powerUp = { x: Math.random() * (canvas.width - 40), y: Math.random() * (canvas.height * 0.5), size: 40 };
-        lastPowerUpTime = Date.now();
+// ✅ Move Bubbles (Fixed)
+function updateBubbles() {
+    for (let i = 0; i < bubbleArray.length; i++) {
+        let bubble = bubbleArray[i];
+
+        bubble.y -= bubble.speed; // 🔹 Move bubbles upward
+        bubble.x += Math.sin(bubble.y * 0.05) * 2; // 🔹 Slight wave movement
+        bubble.opacity -= 0.015; // 🔹 Bubbles fade slightly as they rise
+
+        if (bubble.y < -50 || bubble.opacity <= 0) {
+            bubbleArray.splice(i, 1); // 🔹 Remove bubbles off-screen
+            i--;
+        }
     }
 }
 
-// ✅ Power-Up Collection (Fixed)
-function checkPowerUpCollision() {
-    if (powerUp) {
-        let dx = player.x + player.width / 2 - powerUp.x;
-        let dy = player.y - powerUp.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 40) {
-            powerUp = null;
-            powerUpActive = true;
-            setTimeout(() => powerUpActive = false, powerUpDuration);
-        }
+// ✅ Draw Bubbles (Fixed)
+function drawBubbles() {
+    for (let i = 0; i < bubbleArray.length; i++) {
+        let bubble = bubbleArray[i];
+        ctx.fillStyle = `rgba(173, 216, 230, ${bubble.opacity})`; // 🔹 Light blue bubbles with fading
+        ctx.beginPath();
+        ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 
@@ -202,8 +206,8 @@ function gameLoop() {
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
     updateFloatingBear();
-    spawnPowerUp();
-    checkPowerUpCollision();
+    updateBubbles();
+    drawBubbles();
     updateStarfish();
     drawStarfish();
     drawHealthMeter();
