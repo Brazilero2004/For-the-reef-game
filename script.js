@@ -140,7 +140,7 @@ function drawBubbles() {
     }
 }
 
-// ✅ Bubble-Starfish Collision (Fixed & Working)
+// ✅ Bubble-Starfish Collision (Now Working)
 function checkBubbleCollisions() {
     for (let i = 0; i < bubbleArray.length; i++) {
         for (let j = 0; j < starfishArray.length; j++) {
@@ -161,45 +161,7 @@ function checkBubbleCollisions() {
     }
 }
 
-// ✅ Update & Draw Starfish (Restored)
-function updateStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
-        let starfish = starfishArray[i];
-        starfish.y += starfish.speed;
-
-        if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--; 
-            starfishArray.splice(i, 1);
-            i--; 
-            if (reefHealth <= 0) gameOver();
-        }
-    }
-}
-
-function drawStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red"; 
-        ctx.beginPath();
-        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-// ✅ Draw Health Meter
-function drawHealthMeter() {
-    let healthPercent = reefHealth / maxReefHealth;
-    let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
-
-    ctx.fillStyle = meterColor;
-    ctx.fillRect(20, 20, 200 * healthPercent, 20);
-}
-
-// ✅ Game Over
-function gameOver() {
-    alert("The reef has been destroyed! Refresh to play again.");
-}
-
-// ✅ Game Loop (Fixed & Restored)
+// ✅ Game Loop (Fixed)
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
@@ -215,6 +177,6 @@ function gameLoop() {
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
-// ✅ Start Game (Fully Working)
+// ✅ Start Game (Fixed)
 gameLoop();
 startAutoShooting();
