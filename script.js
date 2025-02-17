@@ -81,17 +81,26 @@ document.addEventListener("keydown", function(event) {
         player.x -= player.speed * 10;
     } else if (event.key === "ArrowRight" && player.x + player.width < canvas.width) {
         player.x += player.speed * 10;
-    // ✅ Auto-Shooting Bubbles (Higher & Bigger)
+    }
+});
+
+canvas.addEventListener("touchmove", function(event) {
+    event.preventDefault();
+    let touchX = event.touches[0].clientX;
+    player.x = touchX - player.width / 2;
+});
+
+// ✅ Auto-Shooting Bubbles (Fixed)
 function startAutoShooting() {
     setInterval(() => {
-        let numBubbles = powerUpActive ? 10 : 4; // 🔹 More bubbles with power-up
-        let spread = 10; 
+        let numBubbles = powerUpActive ? 10 : 4; // 🔹 Power-up increases bubbles
+        let spread = 15; 
 
         for (let i = 0; i < numBubbles; i++) {
-            let bubbleSize = 25 + Math.random() * 10; // 🔹 Larger bubbles
+            let bubbleSize = 10 + Math.random() * 6;
             let bubbleX = player.x + player.width / 2 - bubbleSize / 2 + (Math.random() * spread - spread / 2);
-            let bubbleY = player.y - 20; // 🔹 Starts slightly above the player
-            let bubbleSpeedOffset = Math.random() * 2;
+            let bubbleY = player.y; 
+            let bubbleSpeedOffset = Math.random() * 2; 
 
             bubbleArray.push({ 
                 x: bubbleX, 
@@ -101,76 +110,22 @@ function startAutoShooting() {
                 opacity: 1.0 
             });
         }
-    }, powerUpActive ? 80 : 160); // 🔹 Faster bubbles when power-up is active
+    }, powerUpActive ? 100 : 200); // 🔹 Faster bubbles when power-up is active
 }
-            let bubbleSize = 20 + Math.random() * 10; // 🔹 Larger bubbles
-            // ✅ Move Bubbles (Higher & More Visible)
+
+// ✅ Move Bubbles (Fixed)
 function updateBubbles() {
     for (let i = 0; i < bubbleArray.length; i++) {
         let bubble = bubbleArray[i];
 
-        bubble.y -= bubble.speed * 1.5; // 🔹 Move bubbles even higher
-        bubble.x += Math.sin(bubble.y * 0.02) * 3; // 🔹 Stronger wavy motion
-        bubble.opacity -= 0.005; // 🔹 Slower fade effect
+        bubble.y -= bubble.speed; // 🔹 Move bubbles upward
+        bubble.x += Math.sin(bubble.y * 0.05) * 2; // 🔹 Slight wave movement
+        bubble.opacity -= 0.015; // 🔹 Bubbles fade slightly as they rise
 
-        if (bubble.y < -300 || bubble.opacity <= 0) { // 🔹 Bubbles reach even higher
-            bubbleArray.splice(i, 1);
+        if (bubble.y < -50 || bubble.opacity <= 0) {
+            bubbleArray.splice(i, 1); // 🔹 Remove bubbles off-screen
             i--;
         }
-        // ✅ Draw Bubbles (More Visible & Brighter)
-function drawBubbles() {
-    for (let i = 0; i < bubbleArray.length; i++) {
-        let bubble = bubbleArray[i];
-
-        // 🔹 Outer glow effect
-        ctx.fillStyle = `rgba(135, 206, 250, ${bubble.opacity * 0.6})`;
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.size * 1.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 🔹 Inner bright core
-        ctx.fillStyle = `rgba(173, 216, 230, ${bubble.opacity})`;
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-            i--;
-        }// ✅ Draw Bubbles (More Visible)
-function drawBubbles() {
-    for (let i = 0; i < bubbleArray.length; i++) {
-        let bubble = bubbleArray[i];
-
-        // 🔹 Outer glow effect
-        ctx.fillStyle = `rgba(135, 206, 250, ${bubble.opacity * 0.6})`;
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.size * 1.2, 0, Math.PI * 2);
-        ctx.fill();
-
-  // ✅ Bubble-Starfish Collision (Now Working)
-function checkBubbleCollisions() {
-    for (let i = 0; i < bubbleArray.length; i++) {
-        for (let j = 0; j < starfishArray.length; j++) {
-            let bubble = bubbleArray[i];
-            let starfish = starfishArray[j];
-
-            let dx = bubble.x - starfish.x;
-            let dy = bubble.y - starfish.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < bubble.size / 2 + starfish.size / 2) {
-                bubbleArray.splice(i, 1); // 🔹 Remove bubble
-                starfishArray.splice(j, 1); // 🔹 Remove starfish
-                i--; 
-                break;
-            }
-        }
-    }
-}      // 🔹 Inner bright core
-        ctx.fillStyle = `rgba(173, 216, 230, ${bubble.opacity})`;
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
-        ctx.fill();
     }
 }
 
@@ -251,9 +206,8 @@ function gameLoop() {
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
     updateFloatingBear();
-updateBubbles();
-drawBubbles();
-checkBubbleCollisions(); // 🔹 Ensures starfish are removed by bubbles
+    updateBubbles();
+    drawBubbles();
     updateStarfish();
     drawStarfish();
     drawHealthMeter();
