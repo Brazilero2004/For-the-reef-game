@@ -208,6 +208,7 @@ function gameLoop() {
     updateFloatingBear();
     updateBubbles();
     drawBubbles();
+    checkBubbleCollisions(); //
     updateStarfish();
     drawStarfish();
     drawHealthMeter();
@@ -216,6 +217,6 @@ function gameLoop() {
 }
 
 // ✅ Start Game (Fixed)
-gameLoop();
+gameLoop(); {
 startAutoShooting();
     }
