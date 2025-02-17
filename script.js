@@ -133,7 +133,7 @@ ctx.fillStyle = `rgba(135, 206, 250, ${bubble.opacity * 0.6})`;
         ctx.fill();
 
         // 🔹 Inner bright core
-ctx.fillStyle = `rgba(173, 216, 230, ${bubble.opacity})`;
+ctx.fillStyle = `rgba(173, 216, 230, ${bubble.opacity.toFixed(2)})`;
         ctx.beginPath();
         ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
         ctx.fill();
