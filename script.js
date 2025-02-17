@@ -182,6 +182,26 @@ function drawStarfish() {
         ctx.fill();
     }
 }
+// ✅ Bubble-Starfish Collision (Now Working)
+function checkBubbleCollisions() {
+    for (let i = 0; i < bubbleArray.length; i++) {
+        for (let j = 0; j < starfishArray.length; j++) {
+            let bubble = bubbleArray[i];
+            let starfish = starfishArray[j];
+
+            let dx = bubble.x - starfish.x;
+            let dy = bubble.y - starfish.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < bubble.size / 2 + starfish.size / 2) {
+                bubbleArray.splice(i, 1); // 🔹 Remove bubble
+                starfishArray.splice(j, 1); // 🔹 Remove starfish
+                i--; 
+                break;
+            }
+        }
+    }
+}
 
 // ✅ Draw Health Meter
 function drawHealthMeter() {
