@@ -127,7 +127,7 @@ function drawBubbles() {
         let bubble = bubbleArray[i];
 
         // 🔹 Outer glow effect
-        ctx.fillStyle = rgba(135, 206, 250, ${bubble.opacity * 0.6});
+ctx.fillStyle = `rgba(135, 206, 250, ${bubble.opacity * 0.6})`;
         ctx.beginPath();
         ctx.arc(bubble.x, bubble.y, bubble.size * 1.3, 0, Math.PI * 2);
         ctx.fill();
