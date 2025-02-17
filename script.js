@@ -218,3 +218,4 @@ function gameLoop() {
 // ✅ Start Game (Fixed)
 gameLoop();
 startAutoShooting();
+    }
