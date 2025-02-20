@@ -129,19 +129,23 @@ function drawBubbles() {
     }
 }
 
-// ✅ Spawn & Move Starfish with Faster Scaling
 function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
-    
-    // 🔹 Increase spawn rate every 2 seconds (min: 300ms)
+
+    // 🔹 Adjust spawn rate every 2 seconds (min 300ms)
     let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
 
-    let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000)); // 🔹 Increase size every 10s
+    let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000)); // 🔹 Increase size over time
     let xPosition = Math.random() * (canvas.width - starfishSize);
-    starfishArray.push({ x: xPosition, y: -50, size: starfishSize });
+    
+    // ✅ Ensure starfish are still spawning correctly
+    starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeed });
 
+    // ✅ Make sure the function keeps calling itself
     setTimeout(spawnStarfish, adjustedSpawnRate);
 }
+
+// ✅ Ensure this function runs when the game starts
 setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
