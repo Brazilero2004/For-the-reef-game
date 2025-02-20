@@ -132,20 +132,22 @@ function drawBubbles() {
 function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
 
-    // 🔹 Adjust spawn rate every 2 seconds (min 300ms)
+    // 🔹 Adjust spawn rate over time (minimum 300ms)
     let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
 
-    let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000)); // 🔹 Increase size over time
+    // 🔹 Randomly determine starfish size and speed
+    let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000));
     let xPosition = Math.random() * (canvas.width - starfishSize);
-    
-    // ✅ Ensure starfish are still spawning correctly
-    starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeed });
+    let speed = starfishSpeed + Math.min(3, elapsedTime / 20000); // 🔹 Gradually increase speed over time
 
-    // ✅ Make sure the function keeps calling itself
+    // ✅ Ensure new starfish are added to the game
+    starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: speed });
+
+    // ✅ Schedule next starfish spawn
     setTimeout(spawnStarfish, adjustedSpawnRate);
 }
 
-// ✅ Ensure this function runs when the game starts
+// ✅ Ensure spawning starts when the game begins
 setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
