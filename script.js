@@ -155,20 +155,22 @@ function updateStarfish() {
         starfish.y += adjustedSpeed;
 
         // 🔹 Check for collision with bubbles
-        for (let j = 0; j < bubbleArray.length; j++) {
-            let bubble = bubbleArray[j];
+for (let j = 0; j < bubbleArray.length; j++) {
+    let bubble = bubbleArray[j];
 
-            let dx = bubble.x - starfish.x;
-            let dy = bubble.y - starfish.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
+    let dx = bubble.x - starfish.x;
+    let dy = bubble.y - starfish.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < starfish.size / 2 + bubble.size / 2) {
-                starfishArray.splice(i, 1);
-                bubbleArray.splice(j, 1);
-                i--;
-                break;
-            }
-        }
+    if (distance < starfish.size / 2 + bubble.size / 2) {
+        starfishArray.splice(i, 1);
+        bubbleArray.splice(j, 1);
+        i--;
+        starfishDefeated++; // 🔹 Track number of starfish eliminated
+        checkLevelUp(); // 🔹 Check if we need to increase the level
+        break;
+    }
+}
 
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
