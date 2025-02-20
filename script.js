@@ -170,7 +170,7 @@ if (distance < starfish.size / 2 + bubble.size / 2) {
     i--; 
     break;
 }
-
+}
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--;
