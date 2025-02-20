@@ -151,12 +151,12 @@ function spawnStarfish() {
 setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
-    for (let i = 0; i < starfishArray.length; i++) {
+    for (let i = starfishArray.length - 1; i >= 0; i--) { // ✅ Loop backwards to avoid skipping elements
         let starfish = starfishArray[i];
         starfish.y += starfish.speed;
 
         // 🔹 Check for collision with bubbles
-        for (let j = 0; j < bubbleArray.length; j++) {
+        for (let j = bubbleArray.length - 1; j >= 0; j--) { // ✅ Loop backwards for safety
             let bubble = bubbleArray[j];
 
             let dx = bubble.x - starfish.x;
@@ -165,13 +165,23 @@ function updateStarfish() {
 
             if (distance < starfish.size / 2 + bubble.size / 2) {
                 bubbleArray.splice(j, 1); // ✅ Remove bubble first
-                starfishArray.splice(i, 1); // ✅ Then remove starfish
-                starfishDefeated++; // ✅ Only update starfishDefeated after removal
-                checkLevelUp(); // ✅ Check if level needs to increase
-                i--; 
-                break;
+                starfishArray.splice(i, 1); // ✅ Remove starfish
+                starfishDefeated++; // ✅ Only update after starfish is removed
+                checkLevelUp(); // ✅ Check if level should increase
+                break; // ✅ Stop checking once collision is found
             }
         }
+
+        // 🔹 Check if starfish reaches reef
+        if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
+            reefHealth--; 
+            starfishArray.splice(i, 1);
+            i--; 
+
+            if (reefHealth <= 0) gameOver(); 
+        }
+    }
+}
 
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
