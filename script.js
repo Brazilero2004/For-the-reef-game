@@ -184,17 +184,6 @@ function updateStarfish() {
     }
 }
 
-        // 🔹 Check if starfish reaches reef
-        if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--; 
-            starfishArray.splice(i, 1);
-            i--; 
-
-            if (reefHealth <= 0) gameOver(); 
-        }
-    }
-}
-
 // ✅ Draw Starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
