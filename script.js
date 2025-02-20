@@ -145,39 +145,35 @@ function spawnStarfish() {
 setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
-    let elapsedTime = Date.now() - gameStartTime;
-    
-    // 🔹 Increase starfish speed every 15 seconds
-    let adjustedSpeed = starfishSpeed + Math.min(4, elapsedTime / 15000);
-
     for (let i = 0; i < starfishArray.length; i++) {
         let starfish = starfishArray[i];
-        starfish.y += adjustedSpeed;
+        starfish.y += starfish.speed;
 
         // 🔹 Check for collision with bubbles
-for (let j = 0; j < bubbleArray.length; j++) {
-    let bubble = bubbleArray[j];
+        for (let j = 0; j < bubbleArray.length; j++) {
+            let bubble = bubbleArray[j];
 
-    let dx = bubble.x - starfish.x;
-    let dy = bubble.y - starfish.y;
-    let distance = Math.sqrt(dx * dx + dy * dy);
+            let dx = bubble.x - starfish.x;
+            let dy = bubble.y - starfish.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
 
-if (distance < starfish.size / 2 + bubble.size / 2) {
-    bubbleArray.splice(j, 1); // ✅ Remove bubble first
-    starfishArray.splice(i, 1); // ✅ Then remove starfish
-    starfishDefeated++; // ✅ Only update starfishDefeated after removal
-    checkLevelUp(); // ✅ Check if level needs to increase
-    i--; 
-    break;
-}
-}
+            if (distance < starfish.size / 2 + bubble.size / 2) {
+                bubbleArray.splice(j, 1); // ✅ Remove bubble first
+                starfishArray.splice(i, 1); // ✅ Then remove starfish
+                starfishDefeated++; // ✅ Only update starfishDefeated after removal
+                checkLevelUp(); // ✅ Check if level needs to increase
+                i--; 
+                break;
+            }
+        }
+
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
-            reefHealth--;
+            reefHealth--; 
             starfishArray.splice(i, 1);
             i--; 
 
-            if (reefHealth <= 0) gameOver();
+            if (reefHealth <= 0) gameOver(); 
         }
     }
 }
