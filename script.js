@@ -162,14 +162,13 @@ for (let j = 0; j < bubbleArray.length; j++) {
     let dy = bubble.y - starfish.y;
     let distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance < starfish.size / 2 + bubble.size / 2) {
-        starfishArray.splice(i, 1);
-        bubbleArray.splice(j, 1);
-        i--;
-        starfishDefeated++; // 🔹 Track number of starfish eliminated
-        checkLevelUp(); // 🔹 Check if we need to increase the level
-        break;
-    }
+if (distance < starfish.size / 2 + bubble.size / 2) {
+    bubbleArray.splice(j, 1); // ✅ Remove bubble first
+    starfishArray.splice(i, 1); // ✅ Then remove starfish
+    starfishDefeated++; // ✅ Only update starfishDefeated after removal
+    checkLevelUp(); // ✅ Check if level needs to increase
+    i--; 
+    break;
 }
 
         // 🔹 Check if starfish reaches reef
