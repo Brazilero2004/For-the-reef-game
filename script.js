@@ -171,6 +171,7 @@ function updateStarfish() {
                 break; // ✅ Stop checking once collision is found
             }
         }
+    }
 
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
