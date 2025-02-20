@@ -41,6 +41,8 @@ let bubbleSpeed = 10;
 
 // ✅ Difficulty Scaling (Increased Intensity)
 let gameStartTime = Date.now();
+let level = 1;
+let starfishDefeated = 0;
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
