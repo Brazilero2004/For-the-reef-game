@@ -220,9 +220,9 @@ updateStarfish();
 drawStarfish();
 drawHealthMeter();
 drawPlayer();
-        ctx.fillStyle = "white"; 
-ctx.font = "20px Arial"; 
-ctx.fillText("Starfish Count: " + starfishArray.length, 20, 50);
+        ctx.fillStyle = "white";
+ctx.font = "20px Arial";
+ctx.fillText("Starfish: " + starfishArray.length, 20, 50);
 if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
