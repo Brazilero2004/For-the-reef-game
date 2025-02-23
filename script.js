@@ -161,9 +161,10 @@ function updateStarfish() {
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < starfish.size / 2 + bubble.size / 2) {
-                bubbleArray.splice(j, 1); // ✅ Remove bubble first
-                starfishArray.splice(i, 1); // ✅ Remove starfish
-                starfishDefeated++; // ✅ Only update after starfish is removed
+    starfishArray.splice(i, 1);
+    bubbleArray.splice(j, 1);
+    i = Math.max(i - 1, 0); // 🔹 Prevents skipping next starfish
+    
                 checkLevelUp(); // ✅ Check if level should increase
                 break; // ✅ Stop checking once collision is found
             }
@@ -220,7 +221,7 @@ updateStarfish();
 drawStarfish();
 drawHealthMeter();
 drawPlayer();
-        spawnStarfish(); // 🔹 Force a starfish to spawn every frame
+         spawnStarfish(); // 🔹 Start spawning starfish normally
         ctx.fillStyle = "white";
 ctx.font = "20px Arial";
 ctx.fillText("Starfish: " + starfishArray.length, 20, 50);
