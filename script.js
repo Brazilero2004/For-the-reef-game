@@ -231,3 +231,5 @@ if (reefHealth > 0) requestAnimationFrame(gameLoop);
 // ✅ Start Game
 gameLoop();
 startAutoShooting();
+spawnStarfish(); // ✅ Start spawning starfish normally
+
