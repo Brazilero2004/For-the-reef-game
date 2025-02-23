@@ -220,6 +220,7 @@ updateStarfish();
 drawStarfish();
 drawHealthMeter();
 drawPlayer();
+        spawnStarfish(); // 🔹 Force a starfish to spawn every frame
         ctx.fillStyle = "white";
 ctx.font = "20px Arial";
 ctx.fillText("Starfish: " + starfishArray.length, 20, 50);
