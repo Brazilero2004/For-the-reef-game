@@ -169,7 +169,17 @@ function updateStarfish() {
                 break; // ✅ Stop checking once collision is found
             }
         }
+function checkLevelUp() {
+    if (starfishDefeated >= level * 30) { // Every 30 starfish
+        level++;  // Increase level
+        starfishDefeated = 0; // Reset counter
+        console.log(`Level Up! Now at Level ${level}`);
 
+        // Increase difficulty
+        starfishSpeed += 0.5;
+        spawnRate = Math.max(500, spawnRate - 200);
+    }
+}
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--; 
@@ -204,18 +214,7 @@ ctx.fillStyle = meterColor;
 ctx.fillRect(20, 20, 200 * healthPercent, 20);
 
 }
-// ✅ Function to Check Level Up
-function checkLevelUp() {
-    if (starfishDefeated >= level * 30) { // Every 30 starfish
-        level++;  // Increase level
-        starfishDefeated = 0; // Reset counter
-        console.log(`Level Up! Now at Level ${level}`);
 
-        // Increase difficulty
-        starfishSpeed += 0.5;
-        spawnRate = Math.max(500, spawnRate - 200);
-    }
-}
 
 // ✅ Game Over
 function gameOver() {
