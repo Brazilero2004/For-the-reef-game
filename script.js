@@ -160,13 +160,13 @@ function updateStarfish() {
             let dy = bubble.y - starfish.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < starfish.size / 2 + bubble.size / 2) {
+           if (distance < starfish.size / 2 + bubble.size / 2) {
     starfishArray.splice(i, 1);
     bubbleArray.splice(j, 1);
-    i = Math.max(i - 1, 0); // 🔹 Prevents skipping next starfish
-    
-                checkLevelUp(); // ✅ Check if level should increase
-                break; // ✅ Stop checking once collision is found
+    i = Math.max(i - 1, 0); // ✅ Prevents skipping next starfish
+    starfishDefeated++; // ✅ Track number of defeated starfish
+    checkLevelUp(); // ✅ Check if level should increase
+    break; // ✅ Stop checking once collision is found
             }
         }
 function checkLevelUp() {
