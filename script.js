@@ -170,7 +170,8 @@ function updateStarfish() {
             }
         }
 function checkLevelUp() {
-    if (starfishDefeated >= level * 30) { // Every 30 starfish
+       console.log(`Starfish Defeated: ${starfishDefeated}, Level: ${level}`); // ✅ Log before checking
+        if (starfishDefeated >= level * 30) { // Every 30 starfish
         level++;  // Increase level
         starfishDefeated = 0; // Reset counter
         console.log(`Level Up! Now at Level ${level}`);
