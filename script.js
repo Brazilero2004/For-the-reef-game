@@ -221,7 +221,7 @@ updateStarfish();
 drawStarfish();
 drawHealthMeter();
 drawPlayer();
-         spawnStarfish(); // 🔹 Start spawning starfish normally
+        
         ctx.fillStyle = "white";
 ctx.font = "20px Arial";
 ctx.fillText("Starfish: " + starfishArray.length, 20, 50);
