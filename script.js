@@ -144,7 +144,7 @@ function spawnStarfish() {
     let xPosition = Math.random() * (canvas.width - starfishSize);
     starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeedAdjusted });
 
-    settimeout(spawnStarfish, adjustedSpawnRate); // Keep spawning with new rate
+    setTimeout(spawnStarfish, adjustedSpawnRate); // Keep spawning with new rate
 }
 
 function updateStarfish() {
