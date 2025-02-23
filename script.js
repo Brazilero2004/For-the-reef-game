@@ -148,41 +148,36 @@ setTimeout(spawnStarfish, adjustedSpawnRate);
 setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
-let elapsedTime = Date.now() - gameStartTime;
+    for (let i = starfishArray.length - 1; i >= 0; i--) { // ✅ Loop backwards to avoid skipping elements
+        let starfish = starfishArray[i];
+        starfish.y += starfish.speed;
 
-// 🔹 Increase starfish speed every 15 seconds  
-let adjustedSpeed = starfishSpeed + Math.min(4, elapsedTime / 15000);  
+        // 🔹 Check for collision with bubbles
+        for (let j = bubbleArray.length - 1; j >= 0; j--) { // ✅ Loop backwards for safety
+            let bubble = bubbleArray[j];
 
-for (let i = 0; i < starfishArray.length; i++) {  
-    let starfish = starfishArray[i];  
-    starfish.y += adjustedSpeed;  
+            let dx = bubble.x - starfish.x;
+            let dy = bubble.y - starfish.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
 
-    // 🔹 Check for collision with bubbles  
-    for (let j = 0; j < bubbleArray.length; j++) {  
-        let bubble = bubbleArray[j];  
+            if (distance < starfish.size / 2 + bubble.size / 2) {
+                bubbleArray.splice(j, 1); // ✅ Remove bubble first
+                starfishArray.splice(i, 1); // ✅ Remove starfish
+                starfishDefeated++; // ✅ Only update after starfish is removed
+                checkLevelUp(); // ✅ Check if level should increase
+                break; // ✅ Stop checking once collision is found
+            }
+        }
 
-        let dx = bubble.x - starfish.x;  
-        let dy = bubble.y - starfish.y;  
-        let distance = Math.sqrt(dx * dx + dy * dy);  
+        // 🔹 Check if starfish reaches reef
+        if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
+            reefHealth--; 
+            starfishArray.splice(i, 1);
+            i--; 
 
-        if (distance < starfish.size / 2 + bubble.size / 2) {  
-            starfishArray.splice(i, 1);  
-            bubbleArray.splice(j, 1);  
-            i--;  
-            break;  
-        }  
-    }  
-
-    // 🔹 Check if starfish reaches reef  
-    if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {  
-        reefHealth--;  
-        starfishArray.splice(i, 1);  
-        i--;   
-
-        if (reefHealth <= 0) gameOver();  
-    }  
-}
-
+            if (reefHealth <= 0) gameOver(); 
+        }
+    }
 }
 
 // ✅ Draw Starfish
