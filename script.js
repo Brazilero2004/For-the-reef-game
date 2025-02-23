@@ -131,21 +131,21 @@ ctx.fill();
 }
 }
 
-// ✅ Spawn & Move Starfish with Faster Scaling
 function spawnStarfish() {
-let elapsedTime = Date.now() - gameStartTime;
+    let elapsedTime = Date.now() - gameStartTime;
 
-// 🔹 Increase spawn rate every 2 seconds (min: 300ms)  
-let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));  
+    // 🔹 Increase spawn rate every 2 seconds (minimum 300ms)
+    let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
 
-let starfishSize = 30 + Math.min(15, Math.floor(elapsedTime / 10000)); // 🔹 Increase size every 10s  
-let xPosition = Math.random() * (canvas.width - starfishSize);  
-starfishArray.push({ x: xPosition, y: -50, size: starfishSize });  
+    // 🔹 Adjust speed and size based on the level
+    let starfishSize = 30 + Math.min(15, level * 2); // Increase size every level
+    let starfishSpeedAdjusted = starfishSpeed + Math.min(4, level * 0.5); // Faster every level
 
-setTimeout(spawnStarfish, adjustedSpawnRate);
+    let xPosition = Math.random() * (canvas.width - starfishSize);
+    starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeedAdjusted });
 
+    setTimeout(spawnStarfish, adjustedSpawnRate); // Keep spawning with new rate
 }
-setTimeout(spawnStarfish, spawnRate);
 
 function updateStarfish() {
     for (let i = starfishArray.length - 1; i >= 0; i--) { // ✅ Loop backwards to avoid skipping elements
