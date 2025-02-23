@@ -133,7 +133,7 @@ ctx.fill();
 
 function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
-
+console.log("Starfish spawned!");
     // 🔹 Increase spawn rate every 2 seconds (minimum 300ms)
     let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
 
