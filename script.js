@@ -204,6 +204,18 @@ ctx.fillStyle = meterColor;
 ctx.fillRect(20, 20, 200 * healthPercent, 20);
 
 }
+// ✅ Function to Check Level Up
+function checkLevelUp() {
+    if (starfishDefeated >= level * 30) { // Every 30 starfish
+        level++;  // Increase level
+        starfishDefeated = 0; // Reset counter
+        console.log(`Level Up! Now at Level ${level}`);
+
+        // Increase difficulty
+        starfishSpeed += 0.5;
+        spawnRate = Math.max(500, spawnRate - 200);
+    }
+}
 
 // ✅ Game Over
 function gameOver() {
