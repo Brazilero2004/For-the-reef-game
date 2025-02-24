@@ -43,6 +43,8 @@ let bubbleSpeed = 10;
 let gameStartTime = Date.now();
 let level = 1;
 let starfishDefeated = 0;
+let levelUpMessageTime = 0;
+
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
