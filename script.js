@@ -171,7 +171,7 @@ function updateStarfish() {
                 checkLevelUp(); // ✅ Call checkLevelUp when starfish is defeated
            }
         }
-
+    }
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--; 
