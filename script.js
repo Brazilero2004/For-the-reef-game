@@ -162,25 +162,15 @@ function updateStarfish() {
             let dy = bubble.y - starfish.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
         
-           if (distance < starfish.size / 2 + bubble.size / 2) {
-    starfishArray.splice(i, 1);
-    bubbleArray.splice(j, 1);
-    i = Math.max(i - 1, 0); // ✅ Prevents skipping next starfish
-    starfishDefeated++; // ✅ Track number of defeated starfish
+                      if (distance < starfish.size / 2 + bubble.size / 2) {
+                starfishArray.splice(i, 1);
+                bubbleArray.splice(j, 1);
+                i = Math.max(i - 1, 0); // ✅ Prevents skipping next starfish
+                starfishDefeated++; // ✅ Track number of defeated starfish
 
-function checkLevelUp() {
-    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
-        level++; // 🔹 Increase level
-        starfishDefeated = 0; // 🔹 Reset counter
-        console.log(`Level Up! Now at Level ${level}`);
-        // ✅ Show Level-Up Message for a Few Seconds
-        levelUpMessageTime = 150; 
-
-        // ✅ Increase Difficulty
-        starfishSpeed += 0.5;
-        spawnRate = Math.max(500, spawnRate - 200);
-    }
-}
+                checkLevelUp(); // ✅ Call checkLevelUp when starfish is defeated
+           }
+        }
 
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
@@ -190,6 +180,22 @@ function checkLevelUp() {
 
             if (reefHealth <= 0) gameOver(); 
         }
+    }
+} // ✅ Closing bracket for updateStarfish()
+
+// ✅ Now move checkLevelUp OUTSIDE of updateStarfish()
+function checkLevelUp() {
+    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
+        level++; // 🔹 Increase level
+        starfishDefeated = 0; // 🔹 Reset counter
+        console.log(`Level Up! Now at Level ${level}`);
+
+        // ✅ Show Level-Up Message for a Few Seconds
+        levelUpMessageTime = 150; 
+
+        // ✅ Increase Difficulty
+        starfishSpeed += 0.5;
+        spawnRate = Math.max(500, spawnRate - 200);
     }
 }
 
