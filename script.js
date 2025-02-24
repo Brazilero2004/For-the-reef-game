@@ -148,7 +148,20 @@ console.log("Starfish spawned!");
 
     setTimeout(spawnStarfish, adjustedSpawnRate);
 }
+function checkLevelUp() {
+    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
+        level++; // 🔹 Increase level
+        starfishDefeated = 0; // 🔹 Reset counter
+        console.log(`Level Up! Now at Level ${level}`);
 
+        // ✅ Show Level-Up Message for a Few Seconds
+        levelUpMessageTime = 150; 
+
+        // ✅ Increase Difficulty
+        starfishSpeed += 0.5;
+        spawnRate = Math.max(500, spawnRate - 200);
+    }
+}
 function updateStarfish() {
     for (let i = starfishArray.length - 1; i >= 0; i--) { // ✅ Loop backwards to avoid skipping elements
         let starfish = starfishArray[i];
@@ -182,22 +195,6 @@ function updateStarfish() {
         }
     }
 } // ✅ Closing bracket for updateStarfish()
-
-// ✅ Now move checkLevelUp OUTSIDE of updateStarfish()
-function checkLevelUp() {
-    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
-        level++; // 🔹 Increase level
-        starfishDefeated = 0; // 🔹 Reset counter
-        console.log(`Level Up! Now at Level ${level}`);
-
-        // ✅ Show Level-Up Message for a Few Seconds
-        levelUpMessageTime = 150; 
-
-        // ✅ Increase Difficulty
-        starfishSpeed += 0.5;
-        spawnRate = Math.max(500, spawnRate - 200);
-    }
-}
 
 // ✅ Draw Starfish
 function drawStarfish() {
