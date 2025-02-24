@@ -170,17 +170,20 @@ function updateStarfish() {
             }
         }
 function checkLevelUp() {
-       console.log(`Starfish Defeated: ${starfishDefeated}, Level: ${level}`); // ✅ Log before checking
-        if (starfishDefeated >= level * 30) { // Every 30 starfish
-        level++;  // Increase level
-        starfishDefeated = 0; // Reset counter
+    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
+        level++; // 🔹 Increase level
+        starfishDefeated = 0; // 🔹 Reset counter
         console.log(`Level Up! Now at Level ${level}`);
 
-        // Increase difficulty
+        // ✅ Show Level-Up Message for a Few Seconds
+        levelUpMessageTime = 150; 
+
+        // ✅ Increase Difficulty
         starfishSpeed += 0.5;
         spawnRate = Math.max(500, spawnRate - 200);
     }
 }
+
         // 🔹 Check if starfish reaches reef
         if (starfish.y + starfish.size >= canvas.height - canvas.height * 0.3) {
             reefHealth--; 
@@ -234,6 +237,13 @@ ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height
         starfishSpeed += 0.3; // 🔹 Make starfish move faster
         console.log("Level Up! Now Level:", level);
     }
+}
+// ✅ Display Level-Up Message
+if (levelUpMessageTime > 0) {
+    ctx.fillStyle = "white";
+    ctx.font = "bold 40px Arial";
+    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
+    levelUpMessageTime--;
 }
 
 drawReef();
