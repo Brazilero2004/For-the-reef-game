@@ -223,30 +223,26 @@ function gameOver() {
 alert("The reef has been destroyed! Refresh to play again.");
 }
 
-// ✅ Game Loop
 function gameLoop() {
-// ✅ Display Level-Up Message
-if (levelUpMessageTime > 0) {
-    ctx.fillStyle = "white";
-    ctx.font = "bold 40px Arial";
-    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
-    levelUpMessageTime--;
-}
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
-drawReef();
-updateBubbles();
-drawBubbles();
-updateStarfish();
-drawStarfish();
-drawHealthMeter();
-drawPlayer();
-        
+    if (levelUpMessageTime > 0) {
         ctx.fillStyle = "white";
-ctx.font = "20px Arial";
-ctx.fillText("Starfish: " + starfishArray.length, 20, 50);
-if (reefHealth > 0) requestAnimationFrame(gameLoop);
-}
+        ctx.font = "bold 40px Arial";
+        ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
+        levelUpMessageTime--;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
+    drawReef();
+    updateBubbles();
+    drawBubbles();
+    updateStarfish();
+    drawStarfish();
+    drawHealthMeter();
+    drawPlayer();
+
+    if (reefHealth > 0) requestAnimationFrame(gameLoop);
+} // ✅ Closing bracket
 
 // ✅ Start Game
 gameLoop();
