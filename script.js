@@ -227,6 +227,13 @@ alert("The reef has been destroyed! Refresh to play again.");
 
 // ✅ Game Loop
 function gameLoop() {
+// ✅ Display Level-Up Message
+if (levelUpMessageTime > 0) {
+    ctx.fillStyle = "white";
+    ctx.font = "bold 40px Arial";
+    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
+    levelUpMessageTime--;
+}
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
         function checkLevelUp() {
@@ -237,13 +244,6 @@ ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height
         starfishSpeed += 0.3; // 🔹 Make starfish move faster
         console.log("Level Up! Now Level:", level);
     }
-}
-// ✅ Display Level-Up Message
-if (levelUpMessageTime > 0) {
-    ctx.fillStyle = "white";
-    ctx.font = "bold 40px Arial";
-    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
-    levelUpMessageTime--;
 }
 
 drawReef();
