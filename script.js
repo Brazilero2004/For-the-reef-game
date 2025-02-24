@@ -253,3 +253,4 @@ gameLoop();
 startAutoShooting();
 spawnStarfish(); // ✅ Start spawning starfish normally
 
+    }
