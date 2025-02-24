@@ -174,7 +174,6 @@ function checkLevelUp() {
         level++; // 🔹 Increase level
         starfishDefeated = 0; // 🔹 Reset counter
         console.log(`Level Up! Now at Level ${level}`);
-
         // ✅ Show Level-Up Message for a Few Seconds
         levelUpMessageTime = 150; 
 
@@ -236,16 +235,6 @@ if (levelUpMessageTime > 0) {
 }
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
-        function checkLevelUp() {
-    if (starfishDefeated >= 30) { // 🔹 Every 30 starfish, level up
-        starfishDefeated = 0; // Reset counter
-        level++; // Increase level
-        spawnRate = Math.max(300, spawnRate - 200); // 🔹 Faster starfish spawns
-        starfishSpeed += 0.3; // 🔹 Make starfish move faster
-        console.log("Level Up! Now Level:", level);
-    }
-}
-
 drawReef();
 updateBubbles();
 drawBubbles();
