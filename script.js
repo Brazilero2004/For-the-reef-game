@@ -161,7 +161,7 @@ function updateStarfish() {
             let dx = bubble.x - starfish.x;
             let dy = bubble.y - starfish.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-
+        }
            if (distance < starfish.size / 2 + bubble.size / 2) {
     starfishArray.splice(i, 1);
     bubbleArray.splice(j, 1);
