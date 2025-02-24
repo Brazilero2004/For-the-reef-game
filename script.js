@@ -167,10 +167,7 @@ function updateStarfish() {
     bubbleArray.splice(j, 1);
     i = Math.max(i - 1, 0); // ✅ Prevents skipping next starfish
     starfishDefeated++; // ✅ Track number of defeated starfish
-    checkLevelUp(); // ✅ Check if level should increase
-    break; // ✅ Stop checking once collision is found
-            }
-        }
+
 function checkLevelUp() {
     if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
         level++; // 🔹 Increase level
