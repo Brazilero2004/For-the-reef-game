@@ -194,7 +194,6 @@ function updateStarfish() {
             if (reefHealth <= 0) gameOver(); 
         }
     }
-} // ✅ Closing bracket for updateStarfish()
 
 // ✅ Draw Starfish
 function drawStarfish() {
