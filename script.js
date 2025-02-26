@@ -72,6 +72,9 @@ function drawHealthMeter() {
     ctx.fillStyle = meterColor;  
     ctx.fillRect(20, 20, 200 * healthPercent, 20);
 }
+function drawPlayer() {
+    ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
+}
 
 // ✅ Player Movement (Keyboard & Touch)
 document.addEventListener("keydown", function(event) {
