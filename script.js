@@ -64,6 +64,14 @@ function drawReef() {
         ctx.drawImage(damagedReefBackground, 0, reefY, canvas.width, reefHeight);
     }
 }
+// ✅ Draw Health Meter
+function drawHealthMeter() {
+    let healthPercent = reefHealth / maxReefHealth;
+    let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
+
+    ctx.fillStyle = meterColor;  
+    ctx.fillRect(20, 20, 200 * healthPercent, 20);
+}
 
 // ✅ Player Movement (Keyboard & Touch)
 document.addEventListener("keydown", function(event) {
