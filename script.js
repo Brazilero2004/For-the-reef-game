@@ -129,6 +129,15 @@ function drawBubbles() {
         ctx.fill();
     }
 }
+// ✅ Draw Starfish
+function drawStarfish() {
+    for (let i = 0; i < starfishArray.length; i++) {
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
 
 function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
