@@ -151,13 +151,19 @@ function spawnStarfish() {
     let elapsedTime = Date.now() - gameStartTime;
     console.log("Starfish spawned!");
 
-    let adjustedSpawnRate = Math.max(300, spawnRate - Math.floor(elapsedTime / 2000));
+    // 🔹 Increase spawn rate every 2 seconds (minimum 200ms)
+    let adjustedSpawnRate = Math.max(200, spawnRate - Math.floor(elapsedTime / 1500)); // Faster increase
 
-    let starfishSize = 30 + Math.min(15, level * 2);
-    let starfishSpeedAdjusted = starfishSpeed + Math.min(4, level * 0.5);
+    // 🔹 Adjust speed and size based on the level
+    let starfishSize = 30 + Math.min(20, level * 3); // Increase size every level
+    let starfishSpeedAdjusted = starfishSpeed + Math.min(5, level * 0.7); // Faster every level
 
-    let xPosition = Math.random() * (canvas.width - starfishSize);
-    starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeedAdjusted });
+    // 🔹 Spawn multiple starfish based on level
+    let numStarfish = Math.min(3 + Math.floor(level / 2), 6); // Up to 6 at once
+    for (let i = 0; i < numStarfish; i++) {
+        let xPosition = Math.random() * (canvas.width - starfishSize);
+        starfishArray.push({ x: xPosition, y: -50, size: starfishSize, speed: starfishSpeedAdjusted });
+    }
 
     setTimeout(spawnStarfish, adjustedSpawnRate);
 }
