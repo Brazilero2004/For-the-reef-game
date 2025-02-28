@@ -26,7 +26,8 @@ reefBackground.src = "Screenshot_20250212_120847_Chrome.png";
 
 let damagedReefBackground = new Image();
 damagedReefBackground.src = "20250212_203814.png";
-
+let starfishImg = new Image();
+starfishImg.src = "file-LUk3xAn3XcchstDVmhyxWE.png";
 // ✅ Reef Health
 let maxReefHealth = 10;
 let reefHealth = maxReefHealth;
@@ -140,10 +141,7 @@ function drawBubbles() {
 // ✅ Draw Starfish
 function drawStarfish() {
     for (let i = 0; i < starfishArray.length; i++) {
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.arc(starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.drawImage(starfishImg, starfishArray[i].x, starfishArray[i].y, starfishArray[i].size, starfishArray[i].size);
     }
 }
 
