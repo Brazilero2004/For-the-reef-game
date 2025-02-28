@@ -153,7 +153,7 @@ function spawnStarfish() {
     let adjustedSpawnRate = Math.max(200, spawnRate - Math.floor(elapsedTime / 1500)); // Faster increase
 
     // 🔹 Adjust speed and size based on the level
-    let starfishSize = 30 + Math.min(20, level * 3); // Increase size every level
+    let starfishSize = 60 + Math.min(30, level * 5); // Bigger base size & scales more with levels
     let starfishSpeedAdjusted = starfishSpeed + Math.min(5, level * 0.7); // Faster every level
 
     // 🔹 Spawn multiple starfish based on level
