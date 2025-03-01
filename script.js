@@ -70,8 +70,11 @@ function drawHealthMeter() {
     let healthPercent = reefHealth / maxReefHealth;
     let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
 
-    ctx.fillStyle = meterColor;  
-    ctx.fillRect(20, 20, 200 * healthPercent, 20);
+    // 🔹 Display Starfish Defeated & Level Tracker
+ctx.fillStyle = "white";
+ctx.font = "bold 20px Arial";
+ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
+ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
 }
 
 // ✅ Player Movement (Keyboard & Touch)
@@ -216,11 +219,17 @@ function drawPlayer() {
 function gameLoop() {
 // ✅ Display Level-Up Message
 if (levelUpMessageTime > 0) {
-    ctx.fillStyle = "white";
-    ctx.font = "bold 40px Arial";
-    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; // 🔹 Dark overlay
+    ctx.fillRect(0, 0, canvas.width, canvas.height); // 🔹 Covers the whole screen
+
+    ctx.fillStyle = "white";  // 🔹 Text color
+    ctx.font = "bold 60px Arial";  // 🔹 Large font
+    ctx.textAlign = "center";
+    ctx.fillText(`LEVEL ${level}!`, canvas.width / 2, canvas.height / 2);
+
     levelUpMessageTime--;
 }
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
