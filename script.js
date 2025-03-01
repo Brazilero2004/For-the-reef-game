@@ -214,13 +214,13 @@ function drawPlayer() {
 }
 // ✅ Game Loop
 function gameLoop() {
-    if (levelUpMessageTime > 0) {
-        ctx.fillStyle = "white";
-        ctx.font = "bold 40px Arial";
-        ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
-        levelUpMessageTime--;
-    }
-
+// ✅ Display Level-Up Message
+if (levelUpMessageTime > 0) {
+    ctx.fillStyle = "white";
+    ctx.font = "bold 40px Arial";
+    ctx.fillText(`Level ${level}`, canvas.width / 2 - 50, 100);
+    levelUpMessageTime--;
+}
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
