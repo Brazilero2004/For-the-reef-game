@@ -150,10 +150,9 @@ function spawnStarfish() {
     console.log("Starfish spawned!");
 
     // 🔹 Increase spawn rate every 2 seconds (minimum 200ms)
-    let adjustedSpawnRate = Math.max(200, spawnRate - Math.floor(elapsedTime / 1500)); // Faster increase
-
+let adjustedSpawnRate = Math.max(700, spawnRate - level * 100); // Slower scaling
     // 🔹 Adjust speed and size based on the level
-    let starfishSize = 60 + Math.min(30, level * 5); // Bigger base size & scales more with levels
+    let starfishSize = 60 + Math.min(20, level * 3); // Bigger base size & scales more with levels
     let starfishSpeedAdjusted = starfishSpeed + Math.min(5, level * 0.7); // Faster every level
 
     // 🔹 Spawn multiple starfish based on level
@@ -206,7 +205,7 @@ function checkLevelUp() {
         console.log(`Level Up! Now at Level ${level}`);
         levelUpMessageTime = 150;
 
-        starfishSpeed += 0.5;
+        starfishSpeed += 0.3;
         spawnRate = Math.max(500, spawnRate - 200);
     }
 }
