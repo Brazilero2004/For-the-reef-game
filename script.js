@@ -206,7 +206,7 @@ function checkLevelUp() {
         level++;
         starfishDefeated = 0;
         console.log(`Level Up! Now at Level ${level}`);
-        levelUpMessageTime = 150;
+        levelUpMessageTime = 200;
 
         starfishSpeed += 0.3;
         spawnRate = Math.max(500, spawnRate - 200);
