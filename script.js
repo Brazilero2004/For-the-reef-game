@@ -291,17 +291,31 @@ if (levelUpMessageTime > 0) {
 function activateSlimeBlaster() {
     if (slimeBlasterReady) {
         console.log("Coral Slime Blaster Activated!");
-        starfishArray = []; // ✅ Clears all starfish on screen  
-        slimeBlasterReady = false; // ✅ Disables power-up temporarily  
 
-        // ✅ Reload after 30 seconds  
+        // 🔹 Clear ALL starfish instantly
+        starfishArray = []; 
+
+        // 🔹 Show a green flash effect
+        flashGreenEffect(); 
+
+        // 🔹 Prevent re-use for 30 seconds
+        slimeBlasterReady = false; 
         setTimeout(() => {
             slimeBlasterReady = true;
-            console.log("Slime Blaster Ready Again!");
         }, 30000);
     }
 }
+let flashOpacity = 0;
 
+function flashGreenEffect() {
+    flashOpacity = 1;  // Set to full opacity
+}
+    // 🔹 Draw Flash Effect if active
+    if (flashOpacity > 0) {
+        ctx.fillStyle = `rgba(0, 255, 0, ${flashOpacity})`; // Green Transparent Effect
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        flashOpacity -= 0.05; // Slowly fade out
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
