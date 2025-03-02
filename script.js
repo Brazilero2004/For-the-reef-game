@@ -255,7 +255,7 @@ canvas.addEventListener("touchend", function(event) {
 // ✅ Press Spacebar to Activate Power-Up (Desktop)
 document.addEventListener("keydown", function(event) {
     if (event.code === "Space" && slimeBlasterReady) {
-        activatePowerUp();
+        activateSlimeBlaster();
     }
 });
 // ✅ Game Loop
@@ -282,7 +282,7 @@ if (levelUpMessageTime > 0) {
         
         // ✅ Reset power-up state
         slimeBlasterReady = false;
-        lastPowerUpUse = Date.now();
+        lastSlimeBlasterUse = Date.now();
     }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
