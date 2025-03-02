@@ -276,24 +276,40 @@ document.addEventListener("keydown", function(event) {
 });
 // ✅ Game Loop
 function gameLoop() {
-// ✅ Display Level-Up Message
-if (levelUpMessageTime > 0) {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; // 🔹 Dark overlay
-    ctx.fillRect(0, 0, canvas.width, canvas.height); // 🔹 Covers the whole screen
+    // ✅ Display Level-Up Message
+    if (levelUpMessageTime > 0) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; // 🔹 Dark overlay
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // 🔹 Covers the whole screen
 
-    ctx.fillStyle = "white";  // 🔹 Text color
-    ctx.font = "bold 60px Arial";  // 🔹 Large font
-    ctx.textAlign = "center";
-    ctx.fillText(`LEVEL ${level}!`, canvas.width / 2, canvas.height / 2);
+        ctx.fillStyle = "white";  // 🔹 Text color
+        ctx.font = "bold 60px Arial";  // 🔹 Large font
+        ctx.textAlign = "center";
+        ctx.fillText(`LEVEL ${level}!`, canvas.width / 2, canvas.height / 2);
 
-    levelUpMessageTime--;
-}
+        levelUpMessageTime--;
+    }
+
     // 🔹 Draw Flash Effect if active
     if (flashOpacity > 0) {
         ctx.fillStyle = `rgba(0, 255, 0, ${flashOpacity})`; // Green Transparent Effect
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         flashOpacity -= 0.05; // Slowly fade out
     }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
+    drawReef();
+    updateBubbles();
+    drawBubbles();
+    updateStarfish();
+    drawStarfish();
+    drawHealthMeter();
+    drawPlayer();
+
+    if (reefHealth > 0) requestAnimationFrame(gameLoop);
+}
+
+// ✅ Coral Slime Blaster Activation Function (Moved Outside `gameLoop()`)
 function activateSlimeBlaster() {
     if (slimeBlasterReady) {
         console.log("Coral Slime Blaster Activated!");
@@ -311,32 +327,12 @@ function activateSlimeBlaster() {
         }, 30000);
     }
 }
+
+// ✅ Green Flash Effect Function (Also Moved Outside `gameLoop()`)
 let flashOpacity = 0;
 
 function flashGreenEffect() {
     flashOpacity = 1;  // Set to full opacity
-}
-
-// 🔹 Modify the `gameLoop()` function to include the flash effect:
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
-    drawReef();
-    updateBubbles();
-    drawBubbles();
-    updateStarfish();
-    drawStarfish();
-    drawHealthMeter();
-    drawPlayer();
-
-    // 🔹 Draw Flash Effect if active
-    if (flashOpacity > 0) {
-        ctx.fillStyle = `rgba(0, 255, 0, ${flashOpacity})`; // Green Transparent Effect
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        flashOpacity -= 0.05; // Slowly fade out
-    }
-
-    if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
 
 // ✅ Start Game
