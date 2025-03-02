@@ -88,7 +88,7 @@ function drawHealthMeter() {
     ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
     ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
 }
-
+}
 // ✅ Player Movement (Keyboard & Touch)
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft" && player.x > 0) {
