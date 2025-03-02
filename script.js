@@ -45,9 +45,9 @@ let gameStartTime = Date.now();
 let level = 1;
 let starfishDefeated = 0;
 let levelUpMessageTime = 0;
-// ✅ Power-Up System
-let powerUpReady = false; // Tracks if the power-up is available
-let lastPowerUpUse = 0;   // Timestamp of last use
+// ✅ Slime Blaster Power-Up (GLOBAL)
+let slimeBlasterReady = false;  
+let starfishSinceLastBlaster = 0;
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
