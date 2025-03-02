@@ -66,7 +66,7 @@ function drawReef() {
     }
 }
     
-}function drawHealthMeter() {
+function drawHealthMeter() {
     let healthPercent = reefHealth / maxReefHealth;
     let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
 
