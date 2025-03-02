@@ -94,7 +94,7 @@ function drawHealthMeter() {
     ctx.fillStyle = powerUpReady ? "lime" : "gray"; 
     ctx.fillText("Slime Blaster", canvas.width - 160, 100);
 }
-}
+
 
 // ✅ Player Movement (Keyboard & Touch)
 document.addEventListener("keydown", function(event) {
