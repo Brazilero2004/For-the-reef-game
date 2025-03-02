@@ -253,7 +253,7 @@ function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
 // ✅ Double-Tap to Activate Power-Up (Mobile)
-let lastTap = 0;  
+  
 canvas.addEventListener("touchend", function(event) {  
     let currentTime = new Date().getTime();  
     let tapLength = currentTime - lastTap;  
