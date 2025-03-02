@@ -317,7 +317,8 @@ function flashGreenEffect() {
     flashOpacity = 1;  // Set to full opacity
 }
 
-
+// 🔹 Modify the `gameLoop()` function to include the flash effect:
+function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
@@ -327,6 +328,13 @@ function flashGreenEffect() {
     drawStarfish();
     drawHealthMeter();
     drawPlayer();
+
+    // 🔹 Draw Flash Effect if active
+    if (flashOpacity > 0) {
+        ctx.fillStyle = `rgba(0, 255, 0, ${flashOpacity})`; // Green Transparent Effect
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        flashOpacity -= 0.05; // Slowly fade out
+    }
 
     if (reefHealth > 0) requestAnimationFrame(gameLoop);
 }
