@@ -45,6 +45,9 @@ let gameStartTime = Date.now();
 let level = 1;
 let starfishDefeated = 0;
 let levelUpMessageTime = 0;
+// ✅ Power-Up System
+let powerUpReady = false; // Tracks if the power-up is available
+let lastPowerUpUse = 0;   // Timestamp of last use
 
 // ✅ Position Player at Bottom
 function resetPlayerPosition() {
@@ -223,6 +226,12 @@ function checkLevelUp() {
         starfishSpeed += 0.3;
         spawnRate = Math.max(500, spawnRate - 200);
     }
+        // ✅ Unlock Power-Up Every 30 Starfish
+    if (starfishDefeated % 30 === 0 && starfishDefeated !== 0) {
+        powerUpReady = true;
+        console.log("Power-Up Ready! Double-Tap or Press Space to Use.");
+    }
+}
 }
 function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
