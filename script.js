@@ -91,7 +91,7 @@ function drawHealthMeter() {
     ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
     ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
   // ✅ Display Power-Up Status
-    ctx.fillStyle = powerUpReady ? "lime" : "gray"; 
+    ctx.fillStyle = slimeBlasterReady ? "lime" : "gray"; 
     ctx.fillText("Slime Blaster", canvas.width - 160, 100);
 }
 
@@ -232,8 +232,8 @@ function checkLevelUp() {
     }
         // ✅ Unlock Power-Up Every 30 Starfish
     if (starfishDefeated % 30 === 0 && starfishDefeated !== 0) {
-        powerUpReady = true;
-        console.log("Power-Up Ready! Double-Tap or Press Space to Use.");
+        slimeBlasterReady = true;
+        console.log("Slime Blaster Ready! Double-Tap or Press Space to Use.");
     }
 }
 
@@ -246,7 +246,7 @@ canvas.addEventListener("touchend", function(event) {
     let currentTime = new Date().getTime();
     let tapLength = currentTime - lastTap;
     
-    if (tapLength < 300 && powerUpReady) { // If two taps are close together
+    if (tapLength < 300 && slimeBlasterReady) { // If two taps are close together
         activatePowerUp();
     }
     lastTap = currentTime;
@@ -254,7 +254,7 @@ canvas.addEventListener("touchend", function(event) {
 
 // ✅ Press Spacebar to Activate Power-Up (Desktop)
 document.addEventListener("keydown", function(event) {
-    if (event.code === "Space" && powerUpReady) {
+    if (event.code === "Space" && slimeBlasterReady) {
         activatePowerUp();
     }
 });
@@ -273,14 +273,14 @@ if (levelUpMessageTime > 0) {
     levelUpMessageTime--;
 }
     function activatePowerUp() {
-    if (powerUpReady) {
+    if (slimeBlasterReady) {
         console.log("Coral Slime Blaster Activated!");
         
         // ✅ Clear all starfish on screen
         starfishArray = [];
         
         // ✅ Reset power-up state
-        powerUpReady = false;
+        slimeBlasterReady = false;
         lastPowerUpUse = Date.now();
     }
     }
