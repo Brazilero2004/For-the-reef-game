@@ -7,6 +7,9 @@ function resizeCanvas() {
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
+document.addEventListener("dblclick", function(event) {
+    event.preventDefault(); // ✅ Prevents zooming in on double-tap
+}, { passive: false });
 
 // ✅ Load Player
 let player = {
@@ -241,15 +244,19 @@ function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
 // ✅ Double-Tap to Activate Power-Up (Mobile)
-let lastTap = 0;
-canvas.addEventListener("touchend", function(event) {
-    let currentTime = new Date().getTime();
-    let tapLength = currentTime - lastTap;
-    
-    if (tapLength < 300 && slimeBlasterReady) { // If two taps are close together
-        activateSlimeBlaster();
-    }
-    lastTap = currentTime;
+let lastTap = 0;  
+canvas.addEventListener("touchend", function(event) {  
+    let currentTime = new Date().getTime();  
+    let tapLength = currentTime - lastTap;  
+    lastTap = currentTime;  
+
+    if (tapLength < 300 && slimeBlasterReady) { // ✅ Detects fast double-tap  
+        activateSlimeBlaster();  
+        slimeBlasterReady = false;  
+        setTimeout(() => {
+            slimeBlasterReady = true; // ✅ Reloads after 30 seconds
+        }, 30000);  
+    }  
 });
 
 // ✅ Press Spacebar to Activate Power-Up (Desktop)
