@@ -236,7 +236,7 @@ function checkLevelUp() {
         console.log("Power-Up Ready! Double-Tap or Press Space to Use.");
     }
 }
-}
+
 function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
