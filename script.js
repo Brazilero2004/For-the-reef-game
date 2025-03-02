@@ -90,6 +90,10 @@ function drawHealthMeter() {
     ctx.font = "bold 20px Arial";
     ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
     ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
+  // ✅ Display Power-Up Status
+    ctx.fillStyle = powerUpReady ? "lime" : "gray"; 
+    ctx.fillText("Slime Blaster", canvas.width - 160, 100);
+}
 }
 
 // ✅ Player Movement (Keyboard & Touch)
@@ -236,6 +240,24 @@ function checkLevelUp() {
 function drawPlayer() {
     ctx.drawImage(player.img, player.x, player.y, player.width, player.height);
 }
+// ✅ Double-Tap to Activate Power-Up (Mobile)
+let lastTap = 0;
+canvas.addEventListener("touchend", function(event) {
+    let currentTime = new Date().getTime();
+    let tapLength = currentTime - lastTap;
+    
+    if (tapLength < 300 && powerUpReady) { // If two taps are close together
+        activatePowerUp();
+    }
+    lastTap = currentTime;
+});
+
+// ✅ Press Spacebar to Activate Power-Up (Desktop)
+document.addEventListener("keydown", function(event) {
+    if (event.code === "Space" && powerUpReady) {
+        activatePowerUp();
+    }
+});
 // ✅ Game Loop
 function gameLoop() {
 // ✅ Display Level-Up Message
@@ -250,7 +272,18 @@ if (levelUpMessageTime > 0) {
 
     levelUpMessageTime--;
 }
-    
+    function activatePowerUp() {
+    if (powerUpReady) {
+        console.log("Coral Slime Blaster Activated!");
+        
+        // ✅ Clear all starfish on screen
+        starfishArray = [];
+        
+        // ✅ Reset power-up state
+        powerUpReady = false;
+        lastPowerUpUse = Date.now();
+    }
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
