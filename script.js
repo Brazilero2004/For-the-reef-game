@@ -67,14 +67,28 @@ function drawReef() {
 }
 // ✅ Draw Health Meter
 function drawHealthMeter() {
+    
+}function drawHealthMeter() {
     let healthPercent = reefHealth / maxReefHealth;
     let meterColor = healthPercent > 0.5 ? "green" : healthPercent > 0.2 ? "yellow" : "red";
 
-    // 🔹 Display Starfish Defeated & Level Tracker
-ctx.fillStyle = "white";
-ctx.font = "bold 20px Arial";
-ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
-ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
+    // 🔹 Draw the Health Bar
+    ctx.fillStyle = "black";  
+    ctx.fillRect(20, 20, 204, 24); // Background for visibility
+
+    ctx.fillStyle = meterColor;  
+    ctx.fillRect(22, 22, 200 * healthPercent, 20); // Actual health meter
+
+    // 🔹 Add Text for Health Indicator
+    ctx.fillStyle = "white";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText("Reef Health", 30, 37);
+
+    // 🔹 Display Starfish Defeated & Level Tracker (Make sure this is inside this function)
+    ctx.fillStyle = "white";
+    ctx.font = "bold 20px Arial";
+    ctx.fillText(`Level: ${level}`, canvas.width - 120, 40); // Top-right level display
+    ctx.fillText(`Starfish: ${starfishDefeated} / ${level * 30}`, canvas.width - 120, 70); // Starfish counter
 }
 }
 // ✅ Player Movement (Keyboard & Touch)
