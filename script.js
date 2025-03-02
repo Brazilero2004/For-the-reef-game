@@ -7,9 +7,18 @@ function resizeCanvas() {
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
-document.addEventListener("dblclick", function(event) {
-    event.preventDefault(); // ✅ Prevents zooming in on double-tap
-}, { passive: false });
+let lastTap = 0;  
+canvas.addEventListener("touchend", function(event) {  
+    event.preventDefault(); // ✅ Prevents zoom behavior  
+    let currentTime = new Date().getTime();  
+    let tapLength = currentTime - lastTap;  
+    lastTap = currentTime;  
+
+    if (tapLength < 300) { // ✅ Detects a fast double-tap  
+        activateSlimeBlaster(); // ✅ Calls the power-up function  
+    }  
+}, { passive: false }); 
+
 
 // ✅ Load Player
 let player = {
@@ -279,19 +288,20 @@ if (levelUpMessageTime > 0) {
 
     levelUpMessageTime--;
 }
-    function activateSlimeBlaster() { 
+function activateSlimeBlaster() {
     if (slimeBlasterReady) {
         console.log("Coral Slime Blaster Activated!");
+        starfishArray = []; // ✅ Clears all starfish on screen  
+        slimeBlasterReady = false; // ✅ Disables power-up temporarily  
 
-        
-        // ✅ Clear all starfish on screen
-        starfishArray = [];
-        
-        // ✅ Reset power-up state
-        slimeBlasterReady = false;
-        lastSlimeBlasterUse = Date.now();
+        // ✅ Reload after 30 seconds  
+        setTimeout(() => {
+            slimeBlasterReady = true;
+            console.log("Slime Blaster Ready Again!");
+        }, 30000);
     }
-    }
+}
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(oceanBackground, 0, 0, canvas.width, canvas.height - canvas.height * 0.3);
     drawReef();
