@@ -247,7 +247,7 @@ canvas.addEventListener("touchend", function(event) {
     let tapLength = currentTime - lastTap;
     
     if (tapLength < 300 && slimeBlasterReady) { // If two taps are close together
-        activatePowerUp();
+        activateSlimeBlaster();
     }
     lastTap = currentTime;
 });
@@ -272,9 +272,10 @@ if (levelUpMessageTime > 0) {
 
     levelUpMessageTime--;
 }
-    function activatePowerUp() {
+    function activateSlimeBlaster() { 
     if (slimeBlasterReady) {
         console.log("Coral Slime Blaster Activated!");
+
         
         // ✅ Clear all starfish on screen
         starfishArray = [];
