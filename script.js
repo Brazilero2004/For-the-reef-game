@@ -228,20 +228,57 @@ function updateStarfish() {
             i--; 
 
             if (reefHealth <= 0) gameOver(); 
+            function gameWin() {
+    alert("🎉 You Saved the Reef! 🎉\nCongratulations, you have restored the reef!");
+    
+    // ✅ Switch to fully healthy reef background
+    reefHealth = maxReefHealth; 
+    reefBackground.src = "fully_healthy_reef.png"; // Make sure this file exists!
+
+    // ✅ Stop spawning starfish
+    starfishArray = [];
+
+    // ✅ Stop the game loop
+    cancelAnimationFrame(gameLoop);
+
+    // ✅ Display Badge (Will add the tracking system next!)
+    showReefSaverBadge();
+            }
         }
     }
 }
 
 function checkLevelUp() {
-    if (starfishDefeated >= level * 30) {
-        level++;
-        starfishDefeated = 0;
+    if (starfishDefeated >= level * 30) { // 🔹 Every 30 starfish
+        level++; // 🔹 Increase level
+        starfishDefeated = 0; // 🔹 Reset counter
         console.log(`Level Up! Now at Level ${level}`);
-        levelUpMessageTime = 200;
 
-        starfishSpeed += 0.3;
-        spawnRate = Math.max(500, spawnRate - 200);
+        // ✅ Show Level-Up Message for a Few Seconds
+        levelUpMessageTime = 150;
+
+        // ✅ Adjust Difficulty Scaling
+        if (level % 2 === 0) { // 🔹 Increase speed every 2 levels
+            starfishSpeed += 0.4;
+        }
+        if (level % 3 === 0) { // 🔹 Decrease spawn rate every 3 levels
+            spawnRate = Math.max(800, spawnRate - 300);
+        }
+
+        // ✅ Reduce Slime Blaster cooldown at Level 3 and 5
+        if (level === 3 || level === 5) {
+            slimeBlasterCooldown = Math.max(20000, slimeBlasterCooldown - 5000); // 🔹 Reduce cooldown by 5s
+        }
+
+        // ✅ Make starfish grow more slowly
+        maxStarfishSize = 30 + Math.min(10, level * 1.5); // 🔹 Slower increase in size
+
+        // ✅ Check for Win Condition at Level 5
+        if (level === 5) {
+            gameWin(); // 🔹 Call win function when Level 5 is reached
+        }
     }
+}
         // ✅ Unlock Power-Up Every 30 Starfish
     if (starfishDefeated % 30 === 0 && starfishDefeated !== 0) {
         slimeBlasterReady = true;
