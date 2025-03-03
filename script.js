@@ -228,23 +228,6 @@ function updateStarfish() {
             i--; 
 
             if (reefHealth <= 0) gameOver(); 
-            function gameWin() {
-    alert("🎉 You Saved the Reef! 🎉\nCongratulations, you have restored the reef!");
-    
-    // ✅ Switch to fully healthy reef background
-    reefHealth = maxReefHealth; 
-    reefBackground.src = "fully_healthy_reef.png"; // Make sure this file exists!
-
-    // ✅ Stop spawning starfish
-    starfishArray = [];
-
-    // ✅ Stop the game loop
-    cancelAnimationFrame(gameLoop);
-
-    // ✅ Display Badge (Will add the tracking system next!)
-    showReefSaverBadge();
-            }
-        }
     }
 }
 
@@ -311,6 +294,21 @@ document.addEventListener("keydown", function(event) {
         activateSlimeBlaster();
     }
 });
+function gameOver() {
+    alert("💀 The reef has been destroyed! 💀\nTry again to save it!");
+    
+    // ✅ Stop spawning starfish
+    starfishArray = [];
+
+    // ✅ Stop the game loop
+    cancelAnimationFrame(gameLoop);
+
+    // ✅ Option to restart the game
+    setTimeout(() => {
+        location.reload(); // 🔹 Reloads the page to restart the game
+    }, 2000);
+}
+
 // ✅ Game Loop
 function gameLoop() {
     // ✅ Display Level-Up Message
